@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:piramjuego/presentation/screens/cartas_asignadas_screen.dart';
 import 'package:piramjuego/presentation/screens/category_screen.dart';
-import 'package:piramjuego/presentation/screens/games_screen.dart';
-import 'package:piramjuego/presentation/screens/home_screen.dart';
+import 'package:piramjuego/presentation/screens/parametros_screen.dart';
+import 'package:piramjuego/presentation/screens/seleccion_jugadores.dart';
 import 'package:piramjuego/presentation/screens/inicial_home_screen.dart';
 import 'package:piramjuego/presentation/screens/introductions_screen.dart';
 
@@ -24,7 +25,7 @@ final appRouter = GoRouter(
 
     ),
      GoRoute(
-      path: '/games',
+      path: '/parametros',
         builder: (BuildContext context, GoRouterState state) => GamesScreen(),
       
         
@@ -38,6 +39,11 @@ final appRouter = GoRouter(
         
 
 
+    ),
+
+    GoRoute(
+      path: '/cartasasignadas',
+        builder: (BuildContext context, GoRouterState state) => cartasAsignadasScreen(),
     ),
 
     GoRoute(

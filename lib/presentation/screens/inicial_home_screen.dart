@@ -72,13 +72,44 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                child: ElevatedButton(
                 onPressed: () {
                   // Navegar a la pantalla de reglas
-                  ref.read(gameModeProvider.state).state = GameMode.custom;
+                  ref.read(gameModeProvider.state).state = GameMode.quick;
                   GoRouter.of(context).push('/playerselection');
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Partida rápida',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Lexend',
+                      fontWeight: FontWeight.w600
+                      ), // Letra blanca
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF46383b).withOpacity(0.85), // Fondo negro
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30), // Bordes redondeados
+                  ),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 44, vertical: 10), // Padding interior del botón
+                ),
+                           ),
+             ),
+
+             // Partida personalizada
+             Padding(
+               padding: const EdgeInsets.all(50.0),
+               child: ElevatedButton(
+                onPressed: () {
+                  // Navegar a la pantalla de reglas
+                  ref.read(gameModeProvider.state).state = GameMode.custom;
+                  GoRouter.of(context).push('/playerselection');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Partida personalizada',
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Lexend',

@@ -1,29 +1,30 @@
+import 'package:piramjuego/infrastructure/models/regla_fila.dart';
+
 class ConfiguracionJuego {
-  int numeroDePisos;
-  int numeroDeBarajas;
-  bool cartaAdicionalParaRegalar;
-  List<ReglaFila> reglasPorFila;
+  final int numeroDePisos;
+  final int numeroDeBarajas;
+  final bool cartaAdicionalParaRegalar;
+  final List<ReglaFila> reglasPorFila;
 
   ConfiguracionJuego({
-    this.numeroDePisos = 3,
+    this.numeroDePisos = 7,
     this.numeroDeBarajas = 1,
     this.cartaAdicionalParaRegalar = false,
     List<ReglaFila>? reglasPorFila,
-  }) : reglasPorFila = reglasPorFila ?? ReglaFila.reglasDefault(numeroDePisos);
-}
+  }) : reglasPorFila = reglasPorFila ?? ReglaFila.generarReglas(numeroDePisos);
 
-class ReglaFila {
-  int tomar;
-  int regalar;
-
-  ReglaFila({required this.tomar, required this.regalar});
-
-  // Método estático para generar reglas predeterminadas
-  static List<ReglaFila> reglasDefault(int numeroDePisos) {
-    return List.generate(numeroDePisos, (index) {
-      // Puedes definir la lógica para las reglas predeterminadas aquí.
-      // Por ejemplo, tomar y regalar podrían ser iguales al número de la fila.
-      return ReglaFila(tomar: index + 1, regalar: index + 1);
-    });
+  // Método copyWith para clonar el objeto con pequeñas modificaciones
+  ConfiguracionJuego copyWith({
+    int? numeroDePisos,
+    int? numeroDeBarajas,
+    bool? cartaAdicionalParaRegalar,
+    List<ReglaFila>? reglasPorFila,
+  }) {
+    return ConfiguracionJuego(
+      numeroDePisos: numeroDePisos ?? this.numeroDePisos,
+      numeroDeBarajas: numeroDeBarajas ?? this.numeroDeBarajas,
+      cartaAdicionalParaRegalar: cartaAdicionalParaRegalar ?? this.cartaAdicionalParaRegalar,
+      reglasPorFila: reglasPorFila ?? this.reglasPorFila,
+    );
   }
 }

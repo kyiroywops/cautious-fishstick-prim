@@ -21,6 +21,8 @@ class GameSettingsNotifier extends StateNotifier<ConfiguracionJuego> {
     state = state.copyWith(cartaAdicionalParaRegalar: cartaAdicionalParaRegalar);
   }
 
+  
+
   // Agrega aquí métodos para actualizar otras configuraciones si es necesario
 }
 

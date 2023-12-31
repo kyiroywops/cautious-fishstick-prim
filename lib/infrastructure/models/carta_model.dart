@@ -7,5 +7,5 @@ class Carta {
   Carta(this.palo, this.valor);
 
   @override
-  String toString() => '$valor de $palo';
+  String toString() => '${valor.toString().split('.').last} de ${palo.toString().split('.').last}';
 }

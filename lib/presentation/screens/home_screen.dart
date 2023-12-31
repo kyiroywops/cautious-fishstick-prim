@@ -89,7 +89,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
           children: [
             Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Text('Vida de todos los jugadores', style: TextStyle(color: Colors.white,
+            child: Text('Cantidad de cartas', style: TextStyle(color: Colors.white,
             fontFamily: 'Lexend',
             fontWeight: FontWeight.w700
             
@@ -121,7 +121,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                    onPressed: () => _handleLifeSelection(numLives),
           // ...
                   child: Text(
-                    '$numLives ❤️',
+                    '$numLives 🃏',
                     style: TextStyle(
                       fontFamily: 'Lexend',
                       fontWeight: FontWeight.w600,

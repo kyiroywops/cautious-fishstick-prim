@@ -68,7 +68,7 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
             ),
             // Partida rápida
             Padding(
-               padding: const EdgeInsets.all(50.0),
+               padding: const EdgeInsets.fromLTRB(70, 20, 110 , 20),
                child: ElevatedButton(
                 onPressed: () {
                   // Navegar a la pantalla de reglas
@@ -82,12 +82,13 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Lexend',
-                      fontWeight: FontWeight.w600
+                      fontWeight: FontWeight.w600,
+                      fontSize: 19,
                       ), // Letra blanca
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF46383b).withOpacity(0.85), // Fondo negro
+                  backgroundColor: Colors.black.withOpacity(0.85), // Fondo negro
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30), // Bordes redondeados
                   ),
@@ -99,7 +100,7 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
 
              // Partida personalizada
              Padding(
-               padding: const EdgeInsets.all(50.0),
+               padding: const EdgeInsets.fromLTRB(70, 30, 110, 0),
                child: ElevatedButton(
                 onPressed: () {
                   // Navegar a la pantalla de reglas
@@ -108,17 +109,20 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Partida personalizada',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Lexend',
-                      fontWeight: FontWeight.w600
-                      ), // Letra blanca
+                  child: Center(
+                    child: Text(
+                      'Partida personalizada',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Lexend',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 19,
+                        ), // Letra blanca
+                    ),
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF46383b).withOpacity(0.85), // Fondo negro
+                  backgroundColor: Colors.black.withOpacity(0.85), // Fondo negro
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30), // Bordes redondeados
                   ),

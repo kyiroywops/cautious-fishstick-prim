@@ -304,9 +304,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                ref
-                    .read(playerProvider.notifier)
-                    .setLivesForAll(_selectedLives);
+                ref.read(playerProvider.notifier);
 
                 // Opcional: Imprimir la información de los jugadores
                 final updatedPlayers = ref.read(playerProvider);
@@ -315,7 +313,9 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                 }
 
                 // Navegar a la pantalla de reglas
-                gameMode == GameMode.custom ? GoRouter.of(context).go('/parametros') : GoRouter.of(context).go('/cartasasignadas');
+                gameMode == GameMode.custom
+                    ? GoRouter.of(context).go('/parametros')
+                    : GoRouter.of(context).go('/cartasasignadas');
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

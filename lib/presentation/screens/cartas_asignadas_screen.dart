@@ -61,7 +61,7 @@ class CartasAsignadasScreen extends ConsumerWidget {
           ElevatedButton(
               onPressed: () {
                
-                    GoRouter.of(context).go('/juegopiramide');
+                    GoRouter.of(context).go('/juego');
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

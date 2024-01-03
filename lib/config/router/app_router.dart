@@ -47,7 +47,7 @@ final appRouter = GoRouter(
     ),
 
       GoRoute(
-      path: '/juegopiramide',
+      path: '/juego',
       builder: (BuildContext context, GoRouterState state) => JuegoPiramideScreen(),
     ),
 

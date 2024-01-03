@@ -5,17 +5,28 @@ import 'carta_model.dart';
 
 class Baraja {
   List<Carta> cartas = [];
+  List<Carta> getCartasRestantes() {
+  return cartas;
+}
+void actualizarCartas(List<Carta> nuevasCartas) {
+  cartas = nuevasCartas;
+}
 
-  Baraja({bool incluirComodines = false}) {
+  Baraja({bool incluirComodines = false, List<Carta>? cartasPredefinidas}) {
     // Añadir cartas normales
-    Suit.values.where((suit) => suit != Suit.none).forEach((palo) {
-      CardValue.values
-          .where((valor) =>
-              valor != CardValue.joker_1 && valor != CardValue.joker_2)
-          .forEach((valor) {
-        cartas.add(Carta(palo, valor));
+
+    if (cartasPredefinidas != null) {
+      cartas = cartasPredefinidas;
+    } else {
+      Suit.values.where((suit) => suit != Suit.none).forEach((palo) {
+        CardValue.values
+            .where((valor) =>
+                valor != CardValue.joker_1 && valor != CardValue.joker_2)
+            .forEach((valor) {
+          cartas.add(Carta(palo, valor));
+        });
       });
-    });
+    }
 
     // Añadir comodines si es necesario
     if (incluirComodines) {
@@ -39,5 +50,4 @@ class Baraja {
       throw Exception('No hay más cartas en la baraja');
     }
   }
-
 }

@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:piramjuego/infrastructure/models/player_models.dart';
 import 'package:piramjuego/presentation/providers/gamemode_provider.dart';
 import 'package:piramjuego/presentation/providers/player_provider.dart';
-import 'package:piramjuego/presentation/providers/vidas_iniciales_provider.dart';
 
 class PlayerSelectionScreen extends ConsumerStatefulWidget {
   @override
@@ -23,7 +22,6 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     List<Player> players = ref.watch(playerProvider);
-    int _selectedLives = ref.watch(initialLivesProvider.state).state;
     final gameMode = ref.watch(gameModeProvider.state).state;
 
     void _addPlayer() {
@@ -39,7 +37,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
       if (name.isNotEmpty && _selectedAvatar.isNotEmpty) {
         ref.read(playerProvider.notifier).addPlayer(
               Player(
-                  name: name, avatar: _selectedAvatar, lives: _selectedLives),
+                  name: name, avatar: _selectedAvatar),
             );
         _nameController.clear();
         _selectedAvatar = 'assets/images/avatars/avatar1.png';
@@ -51,8 +49,6 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
       setState(() {
         _selectedLives = numLives;
       });
-      ref.read(initialLivesProvider.state).state =
-          numLives; // Aquí actualizamos el provider
     }
 
     void _removePlayer(int index) {
@@ -309,7 +305,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                 // Opcional: Imprimir la información de los jugadores
                 final updatedPlayers = ref.read(playerProvider);
                 for (var player in updatedPlayers) {
-                  print('Jugador: ${player.name}, Vidas: ${player.lives}');
+                  print('Jugador: ${player.name}');
                 }
 
                 // Navegar a la pantalla de reglas

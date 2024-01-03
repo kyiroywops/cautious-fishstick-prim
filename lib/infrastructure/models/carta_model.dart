@@ -1,3 +1,4 @@
+// carta_model.dart
 import 'package:piramjuego/config/constants/cards_types.dart';
 
 class Carta {
@@ -7,5 +8,7 @@ class Carta {
   Carta(this.palo, this.valor);
 
   @override
-  String toString() => '${valor.toString().split('.').last} de ${palo.toString().split('.').last}';
+  String toString() {
+    return '$valor de $palo';
+  }
 }

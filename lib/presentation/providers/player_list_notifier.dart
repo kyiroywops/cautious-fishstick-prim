@@ -1,6 +1,5 @@
 // Definición de PlayerListNotifier
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:piramjuego/infrastructure/models/carta_model.dart';
 import 'package:piramjuego/infrastructure/models/player_models.dart';
 
 class PlayerListNotifier extends StateNotifier<List<Player>> {
@@ -14,12 +13,12 @@ class PlayerListNotifier extends StateNotifier<List<Player>> {
     state = [...state]..removeAt(index);
   }
 
-    // Método para asignar cartas a todos los jugadores
-  void asignarCartas(List<Carta> cartasAsignadas) {
-    state = [
-      for (final jugador in state)
-        jugador.copyWith(cartas: cartasAsignadas),
-    ];
+
+
+    // Método para actualizar la lista de jugadores
+  void setPlayers(List<Player> updatedPlayers) {
+      state = List.from(updatedPlayers); // Crea una nueva instancia de la lista
+
   }
 
 

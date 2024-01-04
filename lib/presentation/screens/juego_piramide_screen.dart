@@ -13,6 +13,8 @@ class JuegoPiramideScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final barajaNotifier = ref.watch(barajaProvider.notifier);
     final jugadorDebeTomar = ref.watch(jugadorDebeTomarProvider);
+    
+
 
 
       print("Reconstruyendo JuegoPiramideScreen con estado actualizado");
@@ -26,6 +28,8 @@ class JuegoPiramideScreen extends ConsumerWidget {
           // Usa 'value' si es necesario para tomar decisiones en la UI
           final piramide = barajaNotifier.piramide;
           final cartasBocaAbajo = barajaNotifier.cartasBocaAbajo;
+
+          
 
           return Column(
             children: [
@@ -45,6 +49,9 @@ class JuegoPiramideScreen extends ConsumerWidget {
                 onPressed: () => voltearSiguienteCarta(ref),
                 child: Text('Voltear Carta'),
               ),
+               // Muestra la regla para el nivel actual si es válido
+                Text("Regla: ${barajaNotifier.reglaActual}"),
+ 
                // Aquí utilizamos el spread operator para incluir condicionalmente un widget.
           if (jugadorDebeTomar != null) ...[
             _buildJugadorDebeTomarWidget(jugadorDebeTomar),

@@ -8,6 +8,7 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
   
   // Añadimos una lista para rastrear el estado de si las cartas están boca abajo.
+
   List<List<bool>> cartasBocaAbajo =
       List.generate(7, (nivel) => List.filled(nivel + 1, true));
 
@@ -18,6 +19,8 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     asignarCartasAJugadores(jugadores, cartasPorJugador);
     iniciarJuegoPiramide();
   }
+
+  String reglaActual = ''; // Añade un campo para la regla actual
 
 
   
@@ -100,6 +103,8 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
   void voltearCartaEnPiramide(int nivel, int posicion) {
     print("Intentando voltear carta en nivel $nivel, posición $posicion");
+    nivelActual = nivel; // Actualiza el nivel actual
+
 
     if (nivel < piramide.length && posicion < piramide[nivel].length) {
       var carta = piramide[nivel][posicion];
@@ -107,6 +112,10 @@ class BarajaNotifier extends StateNotifier<Baraja> {
         print("Volteando carta: $carta");
         cartasVolteadas.add(carta);
         cartasBocaAbajo[nivel][posicion] = false;
+        reglaActual = reglas[nivel];
+
+        
+
 
         // Actualiza el estado de la carta directamente
         carta.voltear();
@@ -124,6 +133,7 @@ class BarajaNotifier extends StateNotifier<Baraja> {
   }
 }
 
+int nivelActual = -1;
 late List<String> reglas; // Inicializa la lista de reglas
 
 // Método para generar reglas basadas en el total de niveles

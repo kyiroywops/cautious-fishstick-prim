@@ -4,9 +4,13 @@ import 'package:piramjuego/infrastructure/models/carta_model.dart';
 import 'package:piramjuego/infrastructure/models/player_models.dart';
 
 class BarajaNotifier extends StateNotifier<Baraja> {
+  // Añadimos una lista para rastrear el estado de si las cartas están boca abajo.
+  List<List<bool>> cartasBocaAbajo =
+      List.generate(7, (nivel) => List.filled(nivel + 1, true));
+
   BarajaNotifier() : super(Baraja());
 
-    void generarYAsignarCartas(List<Player> jugadores, int cartasPorJugador) {
+  void generarYAsignarCartas(List<Player> jugadores, int cartasPorJugador) {
     generarYBarajarMazo();
     asignarCartasAJugadores(jugadores, cartasPorJugador);
     iniciarJuegoPiramide();
@@ -16,7 +20,6 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     state = Baraja();
     state.barajar();
     print("Mazo generado y barajado: ${state.cartas}");
-
   }
 
   Carta sacarCarta() {
@@ -62,10 +65,7 @@ class BarajaNotifier extends StateNotifier<Baraja> {
   List<Carta> cartasRestantes = [];
 
   void iniciarJuegoPiramide() {
-    
     const int totalNiveles = 7;
-
-    
 
     piramide = List.generate(
         totalNiveles, (nivel) => List.filled(nivel + 1, null, growable: false));
@@ -82,24 +82,40 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     cartasRestantes.addAll(state.cartas);
     state = Baraja(cartasPredefinidas: cartasRestantes);
 
+    cartasBocaAbajo = List.generate(7, (nivel) => List.filled(nivel + 1, true));
   }
 
   List<Carta> cartasVolteadas = [];
 
+  void voltearCartaEnPiramide(int nivel, int posicion) {
+    print("Intentando voltear carta en nivel $nivel, posición $posicion");
 
-void voltearCartaEnPiramide(int nivel, int posicion) {
-  if (nivel < piramide.length && posicion < piramide[nivel].length) {
-    var carta = piramide[nivel][posicion];
-    if (carta != null && !cartasVolteadas.contains(carta)) {
-      print("Carta en nivel $nivel, posición $posicion volteada"); // Depuración
-      cartasVolteadas.add(carta);
-      // Aquí actualizas la carta en la pirámide si es necesario
+    if (nivel < piramide.length && posicion < piramide[nivel].length) {
+      var carta = piramide[nivel][posicion];
+      if (carta != null && !cartasVolteadas.contains(carta)) {
+        print("Volteando carta: $carta");
+        cartasVolteadas.add(carta);
+        cartasBocaAbajo[nivel][posicion] = false;
 
-      // Luego, si necesitas actualizar el estado para reflejar cambios en la UI:
-      state = Baraja(cartasPredefinidas: cartasRestantes);
+        // Actualiza el estado de la carta
+        carta.voltear();
+
+        // Crea una copia profunda de la pirámide
+        var nuevaPiramide = List<List<Carta?>>.from(
+            piramide.map((nivel) => List<Carta?>.from(nivel)));
+
+        // Actualiza la carta volteada en la copia de la pirámide
+        nuevaPiramide[nivel][posicion] =
+            carta.copyWith(estaBocaArriba: carta.estaBocaArriba);
+
+        // Forzar la actualización del estado
+        state = state.copyWith(
+          nuevasCartas: List<Carta>.from(state.cartas),
+          nuevaPiramide: nuevaPiramide,
+        );
+      }
     }
   }
-}
 }
 
 // Al final del archivo

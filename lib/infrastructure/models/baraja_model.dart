@@ -1,38 +1,25 @@
 import 'dart:math';
 import 'package:piramjuego/config/constants/cards_types.dart';
-
 import 'carta_model.dart';
 
 class Baraja {
   List<Carta> cartas = [];
-  List<Carta> getCartasRestantes() {
-  return cartas;
-}
-void actualizarCartas(List<Carta> nuevasCartas) {
-  cartas = nuevasCartas;
-}
+  List<List<Carta?>> piramide;
 
-  Baraja({bool incluirComodines = false, List<Carta>? cartasPredefinidas}) {
-    // Añadir cartas normales
-
+  Baraja({
+    List<Carta>? cartasPredefinidas,
+    List<List<Carta?>>? piramideInicial,
+  }) : piramide = piramideInicial ?? List.generate(7, (nivel) => List.filled(nivel + 1, null, growable: false)) {
     if (cartasPredefinidas != null) {
-      cartas = cartasPredefinidas;
+      this.cartas = cartasPredefinidas;
     } else {
       Suit.values.where((suit) => suit != Suit.none).forEach((palo) {
-        CardValue.values
-            .where((valor) =>
-                valor != CardValue.joker_1 && valor != CardValue.joker_2)
-            .forEach((valor) {
+        CardValue.values.where((valor) => valor != CardValue.joker_1 && valor != CardValue.joker_2).forEach((valor) {
           cartas.add(Carta(palo, valor));
         });
       });
-    }
 
-    // Añadir comodines si es necesario
-    if (incluirComodines) {
-      cartas.add(Carta(Suit.none,
-          CardValue.joker_1)); // Utiliza Suit.none para los comodines.
-      cartas.add(Carta(Suit.none, CardValue.joker_2));
+     
     }
   }
 
@@ -42,12 +29,21 @@ void actualizarCartas(List<Carta> nuevasCartas) {
 
   Carta sacarCarta() {
     if (cartas.isNotEmpty) {
-      Carta carta = cartas.last; // Obtiene la última carta
-      print("Carta sacada: $carta");
-      cartas.removeLast(); // Remueve la última carta
+      Carta carta = cartas.removeLast();
       return carta;
     } else {
       throw Exception('No hay más cartas en la baraja');
     }
+  }
+
+  // Método copyWith para crear una nueva instancia con datos actualizados
+  Baraja copyWith({
+    List<Carta>? nuevasCartas,
+    List<List<Carta?>>? nuevaPiramide,
+  }) {
+    return Baraja(
+      cartasPredefinidas: nuevasCartas ?? List<Carta>.from(cartas),
+      piramideInicial: nuevaPiramide ?? List<List<Carta?>>.from(piramide),
+    );
   }
 }

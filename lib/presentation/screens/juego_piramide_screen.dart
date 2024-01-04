@@ -8,12 +8,14 @@ import 'package:playing_cards/playing_cards.dart';
 class JuegoPiramideScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Obtiene el estado actual de la pirámide
-    // En tu pantalla:
     final barajaNotifier = ref.watch(barajaProvider.notifier);
     final piramide = barajaNotifier.piramide;
+    final cartasBocaAbajo = barajaNotifier.cartasBocaAbajo;
 
-    return Scaffold(
+      print("Reconstruyendo JuegoPiramideScreen con estado actualizado");
+
+
+       return Scaffold(
       appBar: AppBar(title: Text('Juego de Pirámide')),
       body: Column(
         children: [
@@ -21,32 +23,30 @@ class JuegoPiramideScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                for (int posicion = 0;
-                    posicion < piramide[nivel].length;
-                    posicion++)
+                for (int posicion = 0; posicion < piramide[nivel].length; posicion++)
                   InkWell(
-                    onTap: () => ref
-                        .read(barajaProvider.notifier)
-                        .voltearCartaEnPiramide(nivel, posicion),
-                    child: piramide[nivel][posicion] != null
-                        ? _buildPlayingCard(piramide[nivel][posicion])
-                        : Container(), // Espacio vacío o carta boca abajo
+                    onTap: () {
+                      if (cartasBocaAbajo[nivel][posicion]) {
+                        ref.read(barajaProvider.notifier).voltearCartaEnPiramide(nivel, posicion);
+                      }
+                    },
+                    child: cartasBocaAbajo[nivel][posicion]
+                        ? _buildCardBack()
+                        : _buildPlayingCard(piramide[nivel][posicion])
                   ),
-                  
               ],
             ),
-            ElevatedButton(
-              onPressed: () => voltearSiguienteCarta(ref),
-              child: Text('Voltear Carta'),
-            )
-],
+          ElevatedButton(
+            onPressed: () => voltearSiguienteCarta(ref),
+            child: Text('Voltear Carta'),
+          )
+        ],
       ),
     );
   }
 
-Widget _buildPlayingCard(my.Carta? carta) {
-  if (carta == null) {
-    // Un Container que simula una carta boca abajo
+
+  Widget _buildCardBack() {
     return Container(
       width: 40,
       height: 60,
@@ -55,17 +55,18 @@ Widget _buildPlayingCard(my.Carta? carta) {
         borderRadius: BorderRadius.circular(4),
       ),
       alignment: Alignment.center,
-      child: Text('?', style: TextStyle(color: Colors.white)),
+      child: Text('?', style: TextStyle(color: Colors.white, fontSize: 24)),
     );
-  } else {
-    // Utiliza el prefijo 'my' para referirte a tus propios tipos
+  }
+
+  Widget _buildPlayingCard(my.Carta? carta) {
+    if (carta == null) return Container(); // Opción para manejar cartas nulas
+
     Suit suit = _convertMySuitToPlayingCardSuit(carta.palo);
     CardValue value = _convertMyValueToPlayingCardValue(carta.valor);
 
-    // Calcula la escala para el tamaño deseado de la carta
     double scale = 0.5; // Ajusta este valor según sea necesario
 
-    // Usa PlayingCardView para mostrar la carta con una escala reducida
     return Container(
       width: 40, // Ancho del contenedor
       height: 60, // Altura del contenedor
@@ -75,7 +76,8 @@ Widget _buildPlayingCard(my.Carta? carta) {
       ),
     );
   }
-}
+
+
   Suit _convertMySuitToPlayingCardSuit(my.Suit mySuit) {
     switch (mySuit) {
       case my.Suit.hearts:
@@ -124,15 +126,25 @@ Widget _buildPlayingCard(my.Carta? carta) {
     }
   }
 }
+
+
+
 void voltearSiguienteCarta(WidgetRef ref) {
-  // Encuentra la primera carta boca abajo.
-  for (int nivel = 0; nivel < ref.read(barajaProvider.notifier).piramide.length; nivel++) {
-    for (int posicion = 0; posicion < ref.read(barajaProvider.notifier).piramide[nivel].length; posicion++) {
-      if (ref.read(barajaProvider.notifier).piramide[nivel][posicion] == null) {
-        // Voltea la carta.
-        ref.read(barajaProvider.notifier).voltearCartaEnPiramide(nivel, posicion);
-        return; // Salir después de voltear una carta.
+    print("Voltear siguiente carta llamado");
+
+  
+  var barajaNotifier = ref.read(barajaProvider.notifier);
+  // Itera sobre las cartas boca abajo y voltear la primera que encuentre
+  for (int nivel = 0; nivel < barajaNotifier.cartasBocaAbajo.length; nivel++) {
+    for (int posicion = 0; posicion < barajaNotifier.cartasBocaAbajo[nivel].length; posicion++) {
+      if (barajaNotifier.cartasBocaAbajo[nivel][posicion]) {
+                print("Encontrada carta boca abajo en nivel $nivel, posición $posicion");
+
+        barajaNotifier.voltearCartaEnPiramide(nivel, posicion);
+        return; // Salir después de voltear una carta
       }
     }
   }
+    print("No se encontraron cartas boca abajo");
+
 }

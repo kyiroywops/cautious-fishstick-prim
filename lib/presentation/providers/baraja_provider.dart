@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piramjuego/infrastructure/models/baraja_model.dart';
 import 'package:piramjuego/infrastructure/models/carta_model.dart';
 import 'package:piramjuego/infrastructure/models/player_models.dart';
 
 class BarajaNotifier extends StateNotifier<Baraja> {
+
+  
   // Añadimos una lista para rastrear el estado de si las cartas están boca abajo.
   List<List<bool>> cartasBocaAbajo =
       List.generate(7, (nivel) => List.filled(nivel + 1, true));
@@ -15,6 +18,9 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     asignarCartasAJugadores(jugadores, cartasPorJugador);
     iniciarJuegoPiramide();
   }
+
+
+  
 
   void generarYBarajarMazo() {
     state = Baraja();
@@ -86,6 +92,9 @@ class BarajaNotifier extends StateNotifier<Baraja> {
   }
 
   List<Carta> cartasVolteadas = [];
+  ValueNotifier<bool> reconstruir = ValueNotifier(false);
+
+
 
   void voltearCartaEnPiramide(int nivel, int posicion) {
     print("Intentando voltear carta en nivel $nivel, posición $posicion");
@@ -97,23 +106,18 @@ class BarajaNotifier extends StateNotifier<Baraja> {
         cartasVolteadas.add(carta);
         cartasBocaAbajo[nivel][posicion] = false;
 
-        // Actualiza el estado de la carta
+        // Actualiza el estado de la carta directamente
         carta.voltear();
 
-        // Crea una copia profunda de la pirámide
-        var nuevaPiramide = List<List<Carta?>>.from(
-            piramide.map((nivel) => List<Carta?>.from(nivel)));
-
-        // Actualiza la carta volteada en la copia de la pirámide
-        nuevaPiramide[nivel][posicion] =
-            carta.copyWith(estaBocaArriba: carta.estaBocaArriba);
-
-        // Forzar la actualización del estado
-        state = state.copyWith(
-          nuevasCartas: List<Carta>.from(state.cartas),
-          nuevaPiramide: nuevaPiramide,
-        );
+        // Actualiza las listas de cartas y pirámide directamente
+        piramide[nivel][posicion] = carta;
+        state = Baraja(
+            cartasPredefinidas: List<Carta>.from(state.cartas),
+            piramideInicial: List<List<Carta?>>.from(
+                piramide.map((nivel) => List<Carta?>.from(nivel))));
       }
+        reconstruir.value = !reconstruir.value;
+
     }
   }
 }

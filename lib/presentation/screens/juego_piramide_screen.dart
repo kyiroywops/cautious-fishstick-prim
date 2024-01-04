@@ -9,41 +9,50 @@ class JuegoPiramideScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final barajaNotifier = ref.watch(barajaProvider.notifier);
-    final piramide = barajaNotifier.piramide;
-    final cartasBocaAbajo = barajaNotifier.cartasBocaAbajo;
 
       print("Reconstruyendo JuegoPiramideScreen con estado actualizado");
 
 
-       return Scaffold(
+        return Scaffold(
       appBar: AppBar(title: Text('Juego de Pirámide')),
-      body: Column(
-        children: [
-          for (int nivel = 0; nivel < piramide.length; nivel++)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (int posicion = 0; posicion < piramide[nivel].length; posicion++)
-                  InkWell(
-                    onTap: () {
-                      if (cartasBocaAbajo[nivel][posicion]) {
-                        ref.read(barajaProvider.notifier).voltearCartaEnPiramide(nivel, posicion);
-                      }
-                    },
-                    child: cartasBocaAbajo[nivel][posicion]
-                        ? _buildCardBack()
-                        : _buildPlayingCard(piramide[nivel][posicion])
-                  ),
-              ],
-            ),
-          ElevatedButton(
-            onPressed: () => voltearSiguienteCarta(ref),
-            child: Text('Voltear Carta'),
-          )
-        ],
+      body: ValueListenableBuilder<bool>(
+        valueListenable: barajaNotifier.reconstruir,
+        builder: (context, value, child) {
+          // Usa 'value' si es necesario para tomar decisiones en la UI
+          final piramide = barajaNotifier.piramide;
+          final cartasBocaAbajo = barajaNotifier.cartasBocaAbajo;
+
+          return Column(
+            children: [
+              for (int nivel = 0; nivel < piramide.length; nivel++)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (int posicion = 0; posicion < piramide[nivel].length; posicion++)
+                      InkWell(
+                        onTap: () {
+                          if (cartasBocaAbajo[nivel][posicion]) {
+                            ref.read(barajaProvider.notifier).voltearCartaEnPiramide(nivel, posicion);
+                          }
+                        },
+                        child: cartasBocaAbajo[nivel][posicion]
+                            ? _buildCardBack()
+                            : _buildPlayingCard(piramide[nivel][posicion])
+                      ),
+                  ],
+                ),
+              ElevatedButton(
+                onPressed: () => voltearSiguienteCarta(ref),
+                child: Text('Voltear Carta'),
+              )
+            ],
+          );
+        },
       ),
     );
   }
+
+  
 
 
   Widget _buildCardBack() {

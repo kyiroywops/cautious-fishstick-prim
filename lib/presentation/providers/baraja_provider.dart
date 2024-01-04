@@ -72,6 +72,8 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
   void iniciarJuegoPiramide() {
     const int totalNiveles = 7;
+    generarReglas(totalNiveles);
+
 
     piramide = List.generate(
         totalNiveles, (nivel) => List.filled(nivel + 1, null, growable: false));
@@ -120,6 +122,22 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
     }
   }
+}
+
+late List<String> reglas; // Inicializa la lista de reglas
+
+// Método para generar reglas basadas en el total de niveles
+void generarReglas(int totalNiveles) {
+  reglas = List.generate(totalNiveles, (nivel) {
+    // Determinar si el nivel es par o impar desde la base de la pirámide
+    bool esPar = (totalNiveles - nivel - 1) % 2 == 0;
+    int cantidad = totalNiveles - nivel;
+
+    if (nivel == totalNiveles) {
+      return "Tomar todo"; // Regla para el último nivel (base de la pirámide)
+    }
+    return esPar ? "Tomar $cantidad" : "Regalar $cantidad";
+  }).reversed.toList();
 }
 
 // Al final del archivo

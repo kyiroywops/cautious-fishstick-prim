@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:piramjuego/config/constants/cards_types.dart' as my;
 import 'package:piramjuego/infrastructure/models/carta_model.dart' as my;
-import 'package:piramjuego/infrastructure/models/player_models.dart';
 import 'package:piramjuego/presentation/providers/baraja_provider.dart';
 import 'package:piramjuego/presentation/providers/player_provider.dart'; // Importa tu playerProvider
 import 'package:piramjuego/presentation/widgets/boton_atras.dart';
@@ -16,10 +15,8 @@ class CartasAsignadasScreen extends ConsumerWidget {
     final jugadores = ref.watch(playerProvider);
 
   void onGenerateAndAssignPressed() {
-    ref.read(barajaProvider.notifier).generarYBarajarMazo();
-    List<Player> updatedPlayers = ref.read(playerProvider.notifier).state;
-    ref.read(barajaProvider.notifier).asignarCartas(updatedPlayers, 2);
-    ref.read(playerProvider.notifier).setPlayers(updatedPlayers);
+    ref.read(barajaProvider.notifier).generarYAsignarCartas(jugadores, 2);
+    ref.read(playerProvider.notifier).setPlayers(jugadores);
   }
 
     

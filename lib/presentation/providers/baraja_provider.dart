@@ -6,10 +6,17 @@ import 'package:piramjuego/infrastructure/models/player_models.dart';
 class BarajaNotifier extends StateNotifier<Baraja> {
   BarajaNotifier() : super(Baraja());
 
+    void generarYAsignarCartas(List<Player> jugadores, int cartasPorJugador) {
+    generarYBarajarMazo();
+    asignarCartasAJugadores(jugadores, cartasPorJugador);
+    iniciarJuegoPiramide();
+  }
+
   void generarYBarajarMazo() {
     state = Baraja();
     state.barajar();
     print("Mazo generado y barajado: ${state.cartas}");
+
   }
 
   Carta sacarCarta() {
@@ -28,7 +35,7 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     }
   }
 
-  void asignarCartas(List<Player> jugadores, int cartasPorJugador) {
+  void asignarCartasAJugadores(List<Player> jugadores, int cartasPorJugador) {
     print("Asignando cartas a los jugadores");
 
     generarYBarajarMazo();
@@ -55,9 +62,8 @@ class BarajaNotifier extends StateNotifier<Baraja> {
   List<Carta> cartasRestantes = [];
 
   void iniciarJuegoPiramide() {
-    generarYBarajarMazo();
-    state.barajar();
-    final int totalNiveles = 7;
+    
+    const int totalNiveles = 7;
 
     
 
@@ -85,6 +91,7 @@ void voltearCartaEnPiramide(int nivel, int posicion) {
   if (nivel < piramide.length && posicion < piramide[nivel].length) {
     var carta = piramide[nivel][posicion];
     if (carta != null && !cartasVolteadas.contains(carta)) {
+      print("Carta en nivel $nivel, posición $posicion volteada"); // Depuración
       cartasVolteadas.add(carta);
       // Aquí actualizas la carta en la pirámide si es necesario
 

@@ -21,16 +21,34 @@ class CartasAsignadasScreen extends ConsumerWidget {
 
     
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Cartas Asignadas a Jugadores'),
-        leading: BotonAtras(),
-        // Otros elementos del AppBar...
-      ),
+ 
+      backgroundColor: Theme.of(context).colorScheme.onBackground,
+
       body: Column(
+        
         children: [
-          ElevatedButton(
-            onPressed: onGenerateAndAssignPressed ,
-            child: Text('Generar y Asignar Cartas'),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SafeArea(
+              bottom: false,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                    child: BotonAtras(),
+                  ),
+                  ElevatedButton(
+                    onPressed: onGenerateAndAssignPressed ,
+                    child: Text('Generar y Asignar Cartas', style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Lexend',
+                              fontWeight: FontWeight.w600), // Letra blanca
+                        
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           Expanded(
             child: ListView.builder(
@@ -39,47 +57,70 @@ class CartasAsignadasScreen extends ConsumerWidget {
                 final jugador = jugadores[index];
                 print("Mostrando cartas de ${jugador.name}: ${jugador.cartas.map((c) => c.toString()).join(', ')}");
 
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: AssetImage(jugador.avatar),
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: AssetImage(jugador.avatar),
+                      radius: 30,
+                    ),
+                    title: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(jugador.name, style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Lexend',
+                          fontWeight: FontWeight.w800,
+                          fontSize: 17
+                          ), 
+                          
+                          // Letra blanca
+                      ),
+                    ),
+                    subtitle: jugador.cartas.isNotEmpty
+                   ? Row(
+                            children: jugador.cartas
+                                .map((c) => _buildPlayingCard(c))
+                                .toList(),
+                          )
+                        : Text("Sin cartas", style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Lexend',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 17
+                          
+                        ),),
                   ),
-                  title: Text(jugador.name),
-                  subtitle: jugador.cartas.isNotEmpty
-                 ? Row(
-                          children: jugador.cartas
-                              .map((c) => _buildPlayingCard(c))
-                              .toList(),
-                        )
-                      : Text("Sin cartas"),
                 );
               },
             )
           ),
-          ElevatedButton(
-              onPressed: () {
-               
-                    GoRouter.of(context).go('/juego');
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Jugar',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Lexend',
-                      fontWeight: FontWeight.w600), // Letra blanca
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: ElevatedButton(
+                onPressed: () {
+                 
+                      GoRouter.of(context).go('/juego');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Jugar',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Lexend',
+                        fontWeight: FontWeight.w600), // Letra blanca
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.onPrimary, // Fondo negro
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30), // Bordes redondeados
+                  ),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 44, vertical: 10), // Padding interior del botón
                 ),
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Color(0xffFF414D).withOpacity(0.85), // Fondo negro
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30), // Bordes redondeados
-                ),
-                padding: EdgeInsets.symmetric(
-                    horizontal: 44, vertical: 10), // Padding interior del botón
-              ),
-            )
+          )
         ],
       ),
     );
@@ -94,8 +135,8 @@ Widget _buildPlayingCard(my.Carta carta) {
 
   // Usa PlayingCardView para mostrar la carta
   return Container(
-    width: 40,  // Ancho de la carta
-    height: 60,  // Altura de la carta
+    width: 60,  // Ancho de la carta
+    height: 80,  // Altura de la carta
     child: PlayingCardView(card: PlayingCard(suit, value)),
   );
 }
@@ -147,3 +188,5 @@ CardValue _convertMyValueToPlayingCardValue(my.CardValue myValue) {
       throw Exception('Invalid card value');
   }
 }
+
+

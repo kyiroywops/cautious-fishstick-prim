@@ -103,7 +103,6 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
   void voltearCartaEnPiramide(int nivel, int posicion) {
     print("Intentando voltear carta en nivel $nivel, posición $posicion");
-    nivelActual = nivel; // Actualiza el nivel actual
 
 
     if (nivel < piramide.length && posicion < piramide[nivel].length) {
@@ -133,23 +132,23 @@ class BarajaNotifier extends StateNotifier<Baraja> {
   }
 }
 
-int nivelActual = -1;
 late List<String> reglas; // Inicializa la lista de reglas
 
-// Método para generar reglas basadas en el total de niveles
 void generarReglas(int totalNiveles) {
   reglas = List.generate(totalNiveles, (nivel) {
-    // Determinar si el nivel es par o impar desde la base de la pirámide
-    bool esPar = (totalNiveles - nivel - 1) % 2 == 0;
-    int cantidad = totalNiveles - nivel;
+    // La cantidad inicia en 1 en la base y aumenta con cada nivel ascendente
+    int cantidad = nivel + 1;
 
-    if (nivel == totalNiveles) {
-      return "Tomar todo"; // Regla para el último nivel (base de la pirámide)
-    }
-    return esPar ? "Tomar $cantidad" : "Regalar $cantidad";
-  }).reversed.toList();
+    // Alternar entre "Tomar" y "Regalar" basándose en si el nivel es par o impar
+    // Nivel 0 es la cima y totalNiveles - 1 es la base
+    String accion = (totalNiveles - nivel) % 2 == 0 ? "Regalas" : "Tomas";
+
+    // Usar "sorbo" en lugar de "sorbos" si la cantidad es 1
+    String sorboPlural = cantidad == 1 ? "sorbo" : "sorbos";
+
+    return "$accion $cantidad $sorboPlural";
+  }).reversed.toList(); // Revertir la lista para que la base sea "Tomar 1"
 }
-
 // Al final del archivo
 final barajaProvider = StateNotifierProvider<BarajaNotifier, Baraja>((ref) {
   return BarajaNotifier();

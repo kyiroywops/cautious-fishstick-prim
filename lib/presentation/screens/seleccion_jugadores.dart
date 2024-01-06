@@ -88,57 +88,13 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text('Cartas por jugador',
+              child: Text('Visualizacion de cartas',
                   style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Lexend',
                       fontWeight: FontWeight.w700)),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(4, (index) {
-                int numLives = index + 1;
-                bool isSelected = numLives == _selectedLives;
-                return Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: isSelected
-                          ? Colors.orange
-                          : Color(
-                              0xFF46383b), // Cambia el color si está seleccionado
-                      onPrimary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      elevation: isSelected
-                          ? 10
-                          : 5, // Elevación más pronunciada si está seleccionado
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      side: isSelected
-                          ? BorderSide(
-                              color: Colors.orangeAccent,
-                              width: 2) // Borde si está seleccionado
-                          : null,
-                    ),
-                    onPressed: () => _handleLifeSelection(numLives),
-                    // ...
-                    child: Text(
-                      '$numLives 🃏',
-                      style: TextStyle(
-                        fontFamily: 'Lexend',
-                        fontWeight: FontWeight.w600,
-                        color: isSelected
-                            ? Colors.white
-                            : Colors.grey[
-                                200], // Cambia el color del texto si está seleccionado
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
+            
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(

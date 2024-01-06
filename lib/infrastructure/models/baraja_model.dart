@@ -5,7 +5,6 @@ import 'carta_model.dart';
 class Baraja {
   List<Carta> cartas = [];
   List<List<Carta?>> piramide;
-  String reglaActual = '';
 
   
 

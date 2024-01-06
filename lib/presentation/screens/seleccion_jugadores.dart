@@ -83,16 +83,58 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(40, 0, 40, 40),
+        padding: const EdgeInsets.fromLTRB(40, 0, 40, 110),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text('Visualizacion de cartas',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Lexend',
-                      fontWeight: FontWeight.w700)),
+           
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 35, 10, 0),
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 7, // Ajusta según el diseño de tu UI
+                    crossAxisSpacing: 10, // Espaciado horizontal
+                    mainAxisSpacing: 10, // Espaciado vertical
+                  ),
+                  itemCount: 21, // Asume que tienes 20 avatares
+                  itemBuilder: (context, index) {
+                    String avatarAsset =
+                        'assets/images/avatars/avatar${index + 1}.png';
+                    bool isSelected = _selectedAvatar == avatarAsset;
+                
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedAvatar =
+                              avatarAsset; // Actualiza el avatar seleccionado
+                        });
+                      },
+                      child: Container(
+                        decoration: isSelected
+                            ? BoxDecoration(
+                                border: Border.all(
+                                  color: Colors
+                                      .orange, // Color del borde cuando está seleccionado
+                                  width: 3, // Ancho del borde
+                                ),
+                                shape: BoxShape
+                                    .circle, // Forma circular para el borde
+                              )
+                            : null,
+                        child: ClipOval(
+                          child: Image.asset(
+                            avatarAsset,
+                            width: 80, // Ajusta el tamaño del avatar
+                            height: 80, // Ajusta el tamaño del avatar
+                            fit: BoxFit
+                                .cover, // Esto asegura que la imagen llene el ClipOval
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
             
             Padding(
@@ -133,83 +175,18 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                     enabledBorder: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(
                         vertical:
-                            10), // Padding vertical para el texto dentro del input
+                            10),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.add_circle, color: Colors.white),
+                      onPressed: players.length >= 20 ? null : _addPlayer,
+                    ), // Padding vertical para el texto dentro del input
                   ),
                 ),
               ),
             ),
             SizedBox(height: 16),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7, // Ajusta según el diseño de tu UI
-                  crossAxisSpacing: 10, // Espaciado horizontal
-                  mainAxisSpacing: 10, // Espaciado vertical
-                ),
-                itemCount: 21, // Asume que tienes 20 avatares
-                itemBuilder: (context, index) {
-                  String avatarAsset =
-                      'assets/images/avatars/avatar${index + 1}.png';
-                  bool isSelected = _selectedAvatar == avatarAsset;
-
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedAvatar =
-                            avatarAsset; // Actualiza el avatar seleccionado
-                      });
-                    },
-                    child: Container(
-                      decoration: isSelected
-                          ? BoxDecoration(
-                              border: Border.all(
-                                color: Colors
-                                    .orange, // Color del borde cuando está seleccionado
-                                width: 3, // Ancho del borde
-                              ),
-                              shape: BoxShape
-                                  .circle, // Forma circular para el borde
-                            )
-                          : null,
-                      child: ClipOval(
-                        child: Image.asset(
-                          avatarAsset,
-                          width: 80, // Ajusta el tamaño del avatar
-                          height: 80, // Ajusta el tamaño del avatar
-                          fit: BoxFit
-                              .cover, // Esto asegura que la imagen llene el ClipOval
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            ElevatedButton(
-              onPressed: players.length >= 20 ? null : _addPlayer,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Agregar jugador',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Lexend',
-                      fontWeight: FontWeight.w600), // Letra blanca
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context)
-                    .colorScheme
-                    .background
-                    .withOpacity(0.50), // Fondo negro
-                foregroundColor: Colors.white, // Color del texto y del ícono
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30), // Bordes redondeados
-                ),
-                padding: EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 10), // Padding interior del botón
-              ),
-            ),
+           
+            
             SizedBox(height: 30),
             Center(
               child: Text(
@@ -281,7 +258,10 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor:
-                    Color(0xffFF414D).withOpacity(0.85), // Fondo negro
+                   Theme.of(context)
+                    .colorScheme
+                    .background
+                    .withOpacity(0.50), // Fondo negro
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30), // Bordes redondeados
                 ),

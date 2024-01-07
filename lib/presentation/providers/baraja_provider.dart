@@ -14,10 +14,10 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
   BarajaNotifier() : super(Baraja());
 
-  void generarYAsignarCartas(List<Player> jugadores, int cartasPorJugador) {
-    generarYBarajarMazo();
+  void generarYAsignarCartas(List<Player> jugadores, int cartasPorJugador, bool sorbosX2, int numerodebarajas) {
+    generarYBarajarMazo(numerodebarajas);
     asignarCartasAJugadores(jugadores, cartasPorJugador);
-    iniciarJuegoPiramide();
+    iniciarJuegoPiramide(sorbosX2);
   }
 
   String reglaActual = ''; // Añade un campo para la regla actual
@@ -25,11 +25,11 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
   
 
-  void generarYBarajarMazo() {
-    state = Baraja();
-    state.barajar();
-    print("Mazo generado y barajado: ${state.cartas}");
-  }
+  void generarYBarajarMazo(int numeroDeBarajas) {
+  state = Baraja(numeroDeBarajas: numeroDeBarajas);
+  state.barajar();
+  print("Mazo generado y barajado con $numeroDeBarajas barajas: ${state.cartas}");
+}
 
   Carta sacarCarta() {
     if (state.cartas.isNotEmpty) {
@@ -50,7 +50,6 @@ class BarajaNotifier extends StateNotifier<Baraja> {
   void asignarCartasAJugadores(List<Player> jugadores, int cartasPorJugador) {
     print("Asignando cartas a los jugadores");
 
-    generarYBarajarMazo();
     print("Generado");
 
     print("Número de jugadores: ${jugadores.length}");
@@ -73,9 +72,11 @@ class BarajaNotifier extends StateNotifier<Baraja> {
   List<List<Carta?>> piramide = [];
   List<Carta> cartasRestantes = [];
 
-  void iniciarJuegoPiramide() {
-    const int totalNiveles = 7;
-    generarReglas(totalNiveles);
+  void iniciarJuegoPiramide(bool sorbosX2) {
+    const int totalNiveles= 7;
+
+
+    generarReglas(totalNiveles, sorbosX2: sorbosX2);
 
 
     piramide = List.generate(
@@ -93,7 +94,7 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     cartasRestantes.addAll(state.cartas);
     state = Baraja(cartasPredefinidas: cartasRestantes);
 
-    cartasBocaAbajo = List.generate(7, (nivel) => List.filled(nivel + 1, true));
+    cartasBocaAbajo = List.generate(totalNiveles, (nivel) => List.filled(nivel + 1, true));
   }
 
   List<Carta> cartasVolteadas = [];
@@ -134,20 +135,18 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
 late List<String> reglas; // Inicializa la lista de reglas
 
-void generarReglas(int totalNiveles) {
+void generarReglas(int totalNiveles, {bool sorbosX2 = false}) {
   reglas = List.generate(totalNiveles, (nivel) {
-    // La cantidad inicia en 1 en la base y aumenta con cada nivel ascendente
     int cantidad = nivel + 1;
+    if (sorbosX2) {
+      cantidad *= 2; // Duplica la cantidad si sorbosX2 es verdadero
+    }
 
-    // Alternar entre "Tomar" y "Regalar" basándose en si el nivel es par o impar
-    // Nivel 0 es la cima y totalNiveles - 1 es la base
     String accion = (totalNiveles - nivel) % 2 == 0 ? "Regalas" : "Tomas";
-
-    // Usar "sorbo" en lugar de "sorbos" si la cantidad es 1
     String sorboPlural = cantidad == 1 ? "sorbo" : "sorbos";
 
     return "$accion $cantidad $sorboPlural";
-  }).reversed.toList(); // Revertir la lista para que la base sea "Tomar 1"
+  }).reversed.toList();
 }
 // Al final del archivo
 final barajaProvider = StateNotifierProvider<BarajaNotifier, Baraja>((ref) {

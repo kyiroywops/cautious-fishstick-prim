@@ -54,21 +54,19 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(46, 46, 46, 140),
-              child: Text(
-                'Pirámide',
-                style: TextStyle(
-                  fontSize: 32.0, // Tamaño de la fuente
-                  color: Colors.white, // Color de la fuente
-                  fontWeight: FontWeight.w800,
-                  fontFamily: 'Lexend' // Negrita
+              padding: EdgeInsets.fromLTRB(46, 46, 46, 30),
+              child: Center(
+                child: Image.asset(
+                  'assets/images/logo.png', // Asegúrate de que la ruta a la imagen sea la correcta
+                  width: 200, // Ajusta el ancho como sea necesario
+                  height: 200, // Ajusta la altura como sea necesario
+                  fit: BoxFit.contain, // Esto asegura que la imagen se escale correctamente dentro de su contenedor
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
             // Partida rápida
             Padding(
-               padding: const EdgeInsets.fromLTRB(70, 20, 110 , 20),
+               padding: const EdgeInsets.fromLTRB(90, 20, 90 , 20),
                child: ElevatedButton(
                 onPressed: () {
                   // Navegar a la pantalla de reglas
@@ -100,7 +98,7 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
 
              // Partida personalizada
              Padding(
-               padding: const EdgeInsets.fromLTRB(70, 30, 110, 0),
+               padding: const EdgeInsets.fromLTRB(90, 20, 90, 20),
                child: ElevatedButton(
                 onPressed: () {
                   // Navegar a la pantalla de reglas

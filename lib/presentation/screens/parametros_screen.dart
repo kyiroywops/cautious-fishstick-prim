@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:piramjuego/infrastructure/models/game_models.dart';
+import 'package:piramjuego/presentation/providers/barajascantidad_provider.dart';
+import 'package:piramjuego/presentation/providers/cartasporjugador_provider.dart';
 import 'package:piramjuego/presentation/providers/gamemode_provider.dart';
+import 'package:piramjuego/presentation/providers/sorbos_provider.dart';
 import 'package:piramjuego/presentation/widgets/boton_atras.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,7 +27,10 @@ class GamesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gameMode = ref.watch(gameModeProvider.state).state;
-    int _selectedLives = 3;
+    final cartasPorJugador = ref.watch(cartasPorJugadorProvider.state).state;
+    final numeroDeBarajas = ref.read(barajasCantidadProvider.state).state;
+
+
 
 
 
@@ -63,347 +68,92 @@ class GamesScreen extends ConsumerWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text('Cantidad de pisos',
-                    style: TextStyle(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text('Sorbos x2',
+                      style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Lexend',
-                        fontWeight: FontWeight.w700)),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(4, (index) {
-                  int numLives = index + 6;
-                  bool isSelected = numLives == _selectedLives;
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: isSelected
-                            ? Colors.orange
-                            : Color(
-                                0xFF46383b), // Cambia el color si está seleccionado
-                        onPrimary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        elevation: isSelected
-                            ? 10
-                            : 5, // Elevación más pronunciada si está seleccionado
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        side: isSelected
-                            ? BorderSide(
-                                color: Colors.orangeAccent,
-                                width: 2) // Borde si está seleccionado
-                            : null,
-                      ),
-                      onPressed: () {
-                      // Esto es solo para fines de visualización por ahora
-                      print('Número de vidas seleccionadas: $numLives');
-                      // Aquí se conectará la lógica de estado más adelante
-                    },
-                      // ...
-                      child: Text(
-                        '$numLives 🃏',
-                        style: TextStyle(
-                          fontFamily: 'Lexend',
-                          fontWeight: FontWeight.w600,
-                          color: isSelected
-                              ? Colors.white
-                              : Colors.grey[
-                                  200], // Cambia el color del texto si está seleccionado
-                        ),
+                        fontWeight: FontWeight.w700
                       ),
                     ),
-                  );
-                }),
+                  ),
+                 Switch(
+                  value: ref.watch(sorbosX2Provider.state).state,
+                  onChanged: (newValue) {
+                      ref.read(sorbosX2Provider.state).state = newValue;
+                  },
+              )
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text('El piso final',
+            ),
+             Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                'Cantidad de cartas por jugador',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Lexend',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [2, 3, 4].map((int value) {
+                return ElevatedButton(
+                  onPressed: () => ref.read(cartasPorJugadorProvider.state).state = value,
+                  style: ElevatedButton.styleFrom(
+                    primary: cartasPorJugador == value ? Colors.blue : Colors.grey,
+                    shape: CircleBorder(),
+                    padding: EdgeInsets.all(20),
+                  ),
+                  child: Text(
+                    value.toString(),
                     style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Lexend',
-                        fontWeight: FontWeight.w700)),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(3, (index) {
-                  int numLives = index + 1;
-                  bool isSelected = numLives == _selectedLives;
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: isSelected
-                            ? Colors.orange
-                            : Color(
-                                0xFF46383b), // Cambia el color si está seleccionado
-                        onPrimary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        elevation: isSelected
-                            ? 10
-                            : 5, // Elevación más pronunciada si está seleccionado
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        side: isSelected
-                            ? BorderSide(
-                                color: Colors.orangeAccent,
-                                width: 2) // Borde si está seleccionado
-                            : null,
-                      ),
-                      onPressed: () {
-                      // Esto es solo para fines de visualización por ahora
-                      print('Número de vidas seleccionadas: $numLives');
-                      // Aquí se conectará la lógica de estado más adelante
-                    },
-                      // ...
-                      child: Text(
-                        '$numLives 🃏',
-                        style: TextStyle(
-                          fontFamily: 'Lexend',
-                          fontWeight: FontWeight.w600,
-                          color: isSelected
-                              ? Colors.white
-                              : Colors.grey[
-                                  200], // Cambia el color del texto si está seleccionado
-                        ),
-                      ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                  );
-                }),
+                  ),
+                );
+              }).toList(),
+            ),
+
+             Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                'Cantidad de barajas',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Lexend',
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text('Cantidad de sorbos por ronda',
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [1, 2, 3].map((int value) {
+                return ElevatedButton(
+                  onPressed: () => ref.read(barajasCantidadProvider.state).state = value,
+                  style: ElevatedButton.styleFrom(
+                    primary: numeroDeBarajas == value ? Colors.blue : Colors.grey,
+                    shape: CircleBorder(),
+                    padding: EdgeInsets.all(20),
+                  ),
+                  child: Text(
+                    value.toString(),
                     style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Lexend',
-                        fontWeight: FontWeight.w700)),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(2, (index) {
-                  int numLives = index + 1;
-                  bool isSelected = numLives == _selectedLives;
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: isSelected
-                            ? Colors.orange
-                            : Color(
-                                0xFF46383b), // Cambia el color si está seleccionado
-                        onPrimary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        elevation: isSelected
-                            ? 10
-                            : 5, // Elevación más pronunciada si está seleccionado
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        side: isSelected
-                            ? BorderSide(
-                                color: Colors.orangeAccent,
-                                width: 2) // Borde si está seleccionado
-                            : null,
-                      ),
-                      onPressed: () {
-                      // Esto es solo para fines de visualización por ahora
-                      print('Número de vidas seleccionadas: $numLives');
-                      // Aquí se conectará la lógica de estado más adelante
-                    },
-                      // ...
-                      child: Text(
-                        '$numLives 🃏',
-                        style: TextStyle(
-                          fontFamily: 'Lexend',
-                          fontWeight: FontWeight.w600,
-                          color: isSelected
-                              ? Colors.white
-                              : Colors.grey[
-                                  200], // Cambia el color del texto si está seleccionado
-                        ),
-                      ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                  );
-                }),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text('Sorbos primera ronda',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Lexend',
-                        fontWeight: FontWeight.w700)),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(4, (index) {
-                  int numLives = index + 1;
-                  bool isSelected = numLives == _selectedLives;
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: isSelected
-                            ? Colors.orange
-                            : Color(
-                                0xFF46383b), // Cambia el color si está seleccionado
-                        onPrimary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        elevation: isSelected
-                            ? 10
-                            : 5, // Elevación más pronunciada si está seleccionado
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        side: isSelected
-                            ? BorderSide(
-                                color: Colors.orangeAccent,
-                                width: 2) // Borde si está seleccionado
-                            : null,
-                      ),
-                      onPressed: () {
-                      // Esto es solo para fines de visualización por ahora
-                      print('Número de vidas seleccionadas: $numLives');
-                      // Aquí se conectará la lógica de estado más adelante
-                    },
-                      // ...
-                      child: Text(
-                        '$numLives 🃏',
-                        style: TextStyle(
-                          fontFamily: 'Lexend',
-                          fontWeight: FontWeight.w600,
-                          color: isSelected
-                              ? Colors.white
-                              : Colors.grey[
-                                  200], // Cambia el color del texto si está seleccionado
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text('Incluir Jokers en la baraja',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Lexend',
-                        fontWeight: FontWeight.w700)),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(2, (index) {
-                  int numLives = index + 1;
-                  bool isSelected = numLives == _selectedLives;
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: isSelected
-                            ? Colors.orange
-                            : Color(
-                                0xFF46383b), // Cambia el color si está seleccionado
-                        onPrimary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        elevation: isSelected
-                            ? 10
-                            : 5, // Elevación más pronunciada si está seleccionado
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        side: isSelected
-                            ? BorderSide(
-                                color: Colors.orangeAccent,
-                                width: 2) // Borde si está seleccionado
-                            : null,
-                      ),
-                      onPressed: () {
-                      // Esto es solo para fines de visualización por ahora
-                      print('Número de vidas seleccionadas: $numLives');
-                      // Aquí se conectará la lógica de estado más adelante
-                    },
-                      // ...
-                      child: Text(
-                        '$numLives 🃏',
-                        style: TextStyle(
-                          fontFamily: 'Lexend',
-                          fontWeight: FontWeight.w600,
-                          color: isSelected
-                              ? Colors.white
-                              : Colors.grey[
-                                  200], // Cambia el color del texto si está seleccionado
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Text('Pirámide invertida',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Lexend',
-                        fontWeight: FontWeight.w700)),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(2, (index) {
-                  int numLives = index + 1;
-                  bool isSelected = numLives == _selectedLives;
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: isSelected
-                            ? Colors.orange
-                            : Color(
-                                0xFF46383b), // Cambia el color si está seleccionado
-                        onPrimary: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        elevation: isSelected
-                            ? 10
-                            : 5, // Elevación más pronunciada si está seleccionado
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        side: isSelected
-                            ? BorderSide(
-                                color: Colors.orangeAccent,
-                                width: 2) // Borde si está seleccionado
-                            : null,
-                      ),
-                      onPressed: () {
-                      // Esto es solo para fines de visualización por ahora
-                      print('Número de vidas seleccionadas: $numLives');
-                      // Aquí se conectará la lógica de estado más adelante
-                    },
-                      // ...
-                      child: Text(
-                        '$numLives 🃏',
-                        style: TextStyle(
-                          fontFamily: 'Lexend',
-                          fontWeight: FontWeight.w600,
-                          color: isSelected
-                              ? Colors.white
-                              : Colors.grey[
-                                  200], // Cambia el color del texto si está seleccionado
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ),
+                  ),
+                );
+              }).toList(),
+            ),
+
+
               Padding(
                 padding: const EdgeInsets.all(60.0),
                 child: ElevatedButton(

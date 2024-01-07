@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:piramjuego/presentation/providers/barajascantidad_provider.dart';
 import 'package:piramjuego/presentation/providers/cartasporjugador_provider.dart';
 import 'package:piramjuego/presentation/providers/gamemode_provider.dart';
+import 'package:piramjuego/presentation/providers/numerodepisos_provider.dart';
 import 'package:piramjuego/presentation/providers/sorbos_provider.dart';
 import 'package:piramjuego/presentation/widgets/boton_atras.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -152,6 +153,39 @@ class GamesScreen extends ConsumerWidget {
                 ),
             ],
           ),
+              Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                'Cantidad de pisos piramide',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Lexend',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (int i = 6; i <= 9; i++) // Para 1 a 4 barajas
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Consumer(
+                    builder: (context, ref, _) {
+                      final numerodePisos = ref.watch(pisoProvider.state);
+                      return ElevatedButton(
+                        onPressed: () => numerodePisos.state = i,
+                        style: ElevatedButton.styleFrom(
+                          primary: numerodePisos.state == i ? Colors.blue : Colors.grey,
+                        ),
+                        child: Text('$i Pisos'),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
+
 
 
               Padding(

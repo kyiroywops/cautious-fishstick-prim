@@ -6,6 +6,7 @@ import 'package:piramjuego/infrastructure/models/carta_model.dart' as my;
 import 'package:piramjuego/presentation/providers/baraja_provider.dart';
 import 'package:piramjuego/presentation/providers/barajascantidad_provider.dart';
 import 'package:piramjuego/presentation/providers/cartasporjugador_provider.dart';
+import 'package:piramjuego/presentation/providers/numerodepisos_provider.dart';
 import 'package:piramjuego/presentation/providers/player_provider.dart'; // Importa tu playerProvider
 import 'package:piramjuego/presentation/providers/sorbos_provider.dart';
 import 'package:piramjuego/presentation/widgets/boton_atras.dart';
@@ -19,12 +20,14 @@ class CartasAsignadasScreen extends ConsumerWidget {
     final sorbosX2 = ref.watch(sorbosX2Provider.state).state; // Accede al estado de sorbos x2
     final cartasPorJugador = ref.read(cartasPorJugadorProvider.state).state;
     final numeroDeBarajas = ref.read(numeroBarajasProvider.state).state;
+    final numerodePisos = ref.read(pisoProvider.state).state;
+
 
 
 
 
   void onGenerateAndAssignPressed() {
-    ref.read(barajaProvider.notifier).generarYAsignarCartas(jugadores, cartasPorJugador, sorbosX2, numeroDeBarajas);
+    ref.read(barajaProvider.notifier).generarYAsignarCartas(jugadores, cartasPorJugador, sorbosX2, numeroDeBarajas, numerodePisos);
     ref.read(playerProvider.notifier).setPlayers(jugadores);
   }
 

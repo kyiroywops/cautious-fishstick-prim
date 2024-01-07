@@ -5,31 +5,31 @@ import 'package:piramjuego/infrastructure/models/carta_model.dart';
 import 'package:piramjuego/infrastructure/models/player_models.dart';
 
 class BarajaNotifier extends StateNotifier<Baraja> {
+  int numerodePisos;
 
-  
+  BarajaNotifier()
+      : numerodePisos = 7,
+        super(Baraja());
+
   // Añadimos una lista para rastrear el estado de si las cartas están boca abajo.
-
   List<List<bool>> cartasBocaAbajo =
       List.generate(7, (nivel) => List.filled(nivel + 1, true));
 
-  BarajaNotifier() : super(Baraja());
-
-  void generarYAsignarCartas(List<Player> jugadores, int cartasPorJugador, bool sorbosX2, int numerodebarajas) {
+  void generarYAsignarCartas(List<Player> jugadores, int cartasPorJugador,
+      bool sorbosX2, int numerodebarajas, int numerodePisos) {
     generarYBarajarMazo(numerodebarajas);
     asignarCartasAJugadores(jugadores, cartasPorJugador);
-    iniciarJuegoPiramide(sorbosX2);
+    iniciarJuegoPiramide(sorbosX2, numerodePisos);
   }
 
   String reglaActual = ''; // Añade un campo para la regla actual
 
-
-  
-
   void generarYBarajarMazo(int numeroDeBarajas) {
-  state = Baraja(numeroDeBarajas: numeroDeBarajas);
-  state.barajar();
-  print("Mazo generado y barajado con $numeroDeBarajas barajas: ${state.cartas}");
-}
+    state = Baraja(numeroDeBarajas: numeroDeBarajas);
+    state.barajar();
+    print(
+        "Mazo generado y barajado con $numeroDeBarajas barajas: ${state.cartas}");
+  }
 
   Carta sacarCarta() {
     if (state.cartas.isNotEmpty) {
@@ -72,18 +72,15 @@ class BarajaNotifier extends StateNotifier<Baraja> {
   List<List<Carta?>> piramide = [];
   List<Carta> cartasRestantes = [];
 
-  void iniciarJuegoPiramide(bool sorbosX2) {
-    const int totalNiveles= 7;
+  void iniciarJuegoPiramide(bool sorbosX2, int numerodePisos) {
 
-
-    generarReglas(totalNiveles, sorbosX2: sorbosX2);
-
+    generarReglas(numerodePisos, sorbosX2: sorbosX2);
 
     piramide = List.generate(
-        totalNiveles, (nivel) => List.filled(nivel + 1, null, growable: false));
+        numerodePisos, (nivel) => List.filled(nivel + 1, null, growable: false));
     cartasRestantes.clear();
 
-    for (int nivel = 0; nivel < totalNiveles; nivel++) {
+    for (int nivel = 0; nivel < numerodePisos; nivel++) {
       for (int posicion = 0; posicion <= nivel; posicion++) {
         if (state.cartas.isNotEmpty) {
           piramide[nivel][posicion] = state.sacarCarta();
@@ -94,17 +91,15 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     cartasRestantes.addAll(state.cartas);
     state = Baraja(cartasPredefinidas: cartasRestantes);
 
-    cartasBocaAbajo = List.generate(totalNiveles, (nivel) => List.filled(nivel + 1, true));
+    cartasBocaAbajo =
+        List.generate(numerodePisos, (nivel) => List.filled(nivel + 1, true));
   }
 
   List<Carta> cartasVolteadas = [];
   ValueNotifier<bool> reconstruir = ValueNotifier(false);
 
-
-
   void voltearCartaEnPiramide(int nivel, int posicion) {
     print("Intentando voltear carta en nivel $nivel, posición $posicion");
-
 
     if (nivel < piramide.length && posicion < piramide[nivel].length) {
       var carta = piramide[nivel][posicion];
@@ -113,9 +108,6 @@ class BarajaNotifier extends StateNotifier<Baraja> {
         cartasVolteadas.add(carta);
         cartasBocaAbajo[nivel][posicion] = false;
         reglaActual = reglas[nivel];
-
-        
-
 
         // Actualiza el estado de la carta directamente
         carta.voltear();
@@ -127,8 +119,7 @@ class BarajaNotifier extends StateNotifier<Baraja> {
             piramideInicial: List<List<Carta?>>.from(
                 piramide.map((nivel) => List<Carta?>.from(nivel))));
       }
-        reconstruir.value = !reconstruir.value;
-
+      reconstruir.value = !reconstruir.value;
     }
   }
 }
@@ -148,6 +139,7 @@ void generarReglas(int totalNiveles, {bool sorbosX2 = false}) {
     return "$accion $cantidad $sorboPlural";
   }).reversed.toList();
 }
+
 // Al final del archivo
 final barajaProvider = StateNotifierProvider<BarajaNotifier, Baraja>((ref) {
   return BarajaNotifier();

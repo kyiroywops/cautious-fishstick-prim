@@ -14,6 +14,16 @@ class JuegoPiramideScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final barajaNotifier = ref.watch(barajaProvider.notifier);
     final jugadorDebeTomar = ref.watch(jugadorDebeTomarProvider);
+    final int numeroDePisos = ref.watch(barajaProvider).piramide.length;
+    
+    final double cardWidth = numeroDePisos > 7 ? 40 : 50;
+    final double cardHeight = numeroDePisos > 7 ? 50 : 70;
+    final double cardScale = numeroDePisos > 7 ? 1 : 1;
+
+    final double widthCartaAbajo = numeroDePisos > 7 ? 30 : 35;
+    final double heightCartaAbajo = numeroDePisos > 7 ? 50 : 55;
+
+
     
 
     Future<bool> _onWillPop() async {
@@ -88,8 +98,9 @@ class JuegoPiramideScreen extends ConsumerWidget {
                       for (int posicion = 0; posicion < piramide[nivel].length; posicion++)
                         InkWell(
                           child: cartasBocaAbajo[nivel][posicion]
-                              ? _buildCardBack()
-                              : _buildPlayingCard(piramide[nivel][posicion])
+                              ? _buildCardBack(widthCartaAbajo, heightCartaAbajo)
+                               : _buildPlayingCard(piramide[nivel][posicion], cardWidth, cardHeight, cardScale)
+
                         ),
                     ],
                   ),
@@ -146,7 +157,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
             color: Colors.white
           ),),
           Row(
-            children: jugador.cartas.map((c) => _buildPlayingCard(c)).toList(),
+            children: jugador.cartas.map((c) => _CartasJugadores(c)).toList(),
           ),
         ],
       ),
@@ -155,12 +166,12 @@ class JuegoPiramideScreen extends ConsumerWidget {
 
 
 
-  Widget _buildCardBack() {
+  Widget _buildCardBack(double widthCartaAbajo, double heightCartaAbajo) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        width: 35,
-        height: 55,
+        width: widthCartaAbajo,
+        height: heightCartaAbajo,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           image: DecorationImage(
@@ -172,8 +183,29 @@ class JuegoPiramideScreen extends ConsumerWidget {
   }
 
 
-  Widget _buildPlayingCard(my.Carta? carta) {
+Widget _buildPlayingCard(my.Carta? carta, double cardWidth, double cardHeight, double scale) {
+  if (carta == null) return Container(); // Opción para manejar cartas nulas
+
+  Suit suit = _convertMySuitToPlayingCardSuit(carta.palo);
+  CardValue value = _convertMyValueToPlayingCardValue(carta.valor);
+
+  // Ahora usa cardWidth, cardHeight y scale que se pasan como parámetros
+  return Container(
+    width: cardWidth,
+    height: cardHeight,
+    child: Transform.scale(
+      scale: scale,
+      child: PlayingCardView(card: PlayingCard(suit, value)),
+    ),
+  );
+}
+
+Widget _CartasJugadores(my.Carta? carta) {
     if (carta == null) return Container(); // Opción para manejar cartas nulas
+
+    
+
+    
 
     Suit suit = _convertMySuitToPlayingCardSuit(carta.palo);
     CardValue value = _convertMyValueToPlayingCardValue(carta.valor);
@@ -189,7 +221,6 @@ class JuegoPiramideScreen extends ConsumerWidget {
       ),
     );
   }
-
 
   Suit _convertMySuitToPlayingCardSuit(my.Suit mySuit) {
     switch (mySuit) {

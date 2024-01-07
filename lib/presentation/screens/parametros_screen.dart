@@ -28,7 +28,6 @@ class GamesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final gameMode = ref.watch(gameModeProvider.state).state;
     final cartasPorJugador = ref.watch(cartasPorJugadorProvider.state).state;
-    final numeroDeBarajas = ref.read(barajasCantidadProvider.state).state;
 
 
 
@@ -132,26 +131,27 @@ class GamesScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [1, 2, 3].map((int value) {
-                return ElevatedButton(
-                  onPressed: () => ref.read(barajasCantidadProvider.state).state = value,
-                  style: ElevatedButton.styleFrom(
-                    primary: numeroDeBarajas == value ? Colors.blue : Colors.grey,
-                    shape: CircleBorder(),
-                    padding: EdgeInsets.all(20),
+           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (int i = 1; i <= 4; i++) // Para 1 a 4 barajas
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Consumer(
+                    builder: (context, ref, _) {
+                      final numeroBarajas = ref.watch(numeroBarajasProvider.state);
+                      return ElevatedButton(
+                        onPressed: () => numeroBarajas.state = i,
+                        style: ElevatedButton.styleFrom(
+                          primary: numeroBarajas.state == i ? Colors.blue : Colors.grey,
+                        ),
+                        child: Text('$i Barajas'),
+                      );
+                    },
                   ),
-                  child: Text(
-                    value.toString(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
+                ),
+            ],
+          ),
 
 
               Padding(

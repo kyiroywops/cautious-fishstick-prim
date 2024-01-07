@@ -18,7 +18,7 @@ class CartasAsignadasScreen extends ConsumerWidget {
     final jugadores = ref.watch(playerProvider);
     final sorbosX2 = ref.watch(sorbosX2Provider.state).state; // Accede al estado de sorbos x2
     final cartasPorJugador = ref.read(cartasPorJugadorProvider.state).state;
-    final numeroDeBarajas = ref.read(barajasCantidadProvider.state).state;
+    final numeroDeBarajas = ref.read(numeroBarajasProvider.state).state;
 
 
 

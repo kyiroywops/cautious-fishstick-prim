@@ -1,3 +1,3 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final barajasCantidadProvider = StateProvider<int>((ref) => 1);
+final numeroBarajasProvider = StateProvider<int>((ref) => 1);

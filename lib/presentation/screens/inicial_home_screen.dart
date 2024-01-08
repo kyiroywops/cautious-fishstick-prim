@@ -58,7 +58,7 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
               child: Center(
                 child: Image.asset(
                   'assets/images/logo.png', // Asegúrate de que la ruta a la imagen sea la correcta
-                  width: 200, // Ajusta el ancho como sea necesario
+                  width: 150, // Ajusta el ancho como sea necesario
                   height: 200, // Ajusta la altura como sea necesario
                   fit: BoxFit.contain, // Esto asegura que la imagen se escale correctamente dentro de su contenedor
                 ),

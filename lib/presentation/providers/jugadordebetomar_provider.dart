@@ -2,4 +2,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:piramjuego/infrastructure/models/player_models.dart';
 
-final jugadorDebeTomarProvider = StateProvider<Player?>((ref) => null);
+final jugadorDebeTomarProvider = StateProvider.autoDispose<Player?>((ref) => null);

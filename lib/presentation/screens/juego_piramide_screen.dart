@@ -123,7 +123,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    onPressed: () => voltearSiguienteCarta(ref),
+                    onPressed: () => voltearSiguienteCarta(ref, context),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
@@ -332,7 +332,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
   }
 }
 
-void voltearSiguienteCarta(WidgetRef ref) {
+void voltearSiguienteCarta(WidgetRef ref, context) {
   print("Voltear siguiente carta llamado");
 
   var barajaNotifier = ref.read(barajaProvider.notifier);
@@ -342,6 +342,14 @@ void voltearSiguienteCarta(WidgetRef ref) {
   // Restablece el estado del mensaje y jugadorDebeTomar al inicio
   ref.read(mostrarMensajeCartaCoincideProvider.state).state = false;
   ref.read(jugadorDebeTomarProvider.notifier).state = null;
+
+   // Verifica si la carta final ya ha sido volteada
+  if (barajaNotifier.cartaFinalVolteada) {
+    print("La última carta ya ha sido volteada. Navegando a la pantalla final.");
+    GoRouter.of(context).go('/cartafinal');
+    return;
+  }
+
 
   for (int nivel = barajaNotifier.cartasBocaAbajo.length - 1; nivel >= 0; nivel--) {
     for (int posicion = 0; posicion < barajaNotifier.cartasBocaAbajo[nivel].length; posicion++) {

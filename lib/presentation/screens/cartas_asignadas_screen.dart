@@ -26,6 +26,7 @@ class CartasAsignadasScreen extends ConsumerWidget {
 
 
 
+
   void onGenerateAndAssignPressed() {
     ref.read(barajaProvider.notifier).generarYAsignarCartas(jugadores, cartasPorJugador, sorbosX2, numeroDeBarajas, numerodePisos);
     ref.read(playerProvider.notifier).setPlayers(jugadores);

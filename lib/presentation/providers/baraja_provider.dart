@@ -27,7 +27,26 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     return false;
   }
 
-  
+    // Método para resetear el juego a su estado inicial
+  void resetearJuego() {
+    // Limpia la lista de cartas volteadas y la pirámide
+    cartasVolteadas.clear();
+    piramide.clear();
+    cartasRestantes.clear();
+
+    // Restablece las cartas boca abajo y la carta final
+    cartasBocaAbajo = List.generate(7, (nivel) => List.filled(nivel + 1, true));
+    cartaFinal = null;
+    cartaFinalVolteada = false;
+    reglaActual = '';
+
+    // Restablece la baraja al estado inicial
+    state = Baraja(cartasPredefinidas: [], piramideInicial: []);
+
+    // Notifica a los oyentes del cambio de estado para que la UI se actualice
+    reconstruir.value = !reconstruir.value;
+    print("Juego reseteado");
+  }
 
   void reemplazarCartaEnPiramide(int nivel, int posicion) {
     if (nivel < piramide.length && posicion < piramide[nivel].length) {
@@ -55,10 +74,16 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     iniciarJuegoPiramide(sorbosX2, numerodePisos);
   }
 
-List<Player> encontrarJugadoresCoincidentes(Carta carta, List<Player> jugadores) {
-  return jugadores.where((jugador) => 
-    jugador.cartas.any((cartaJugador) => carta.valor == cartaJugador.valor)
-  ).toList();
+List<Player> encontrarJugadoresCoincidentes(Carta cartaFinal, List<Player> jugadores) {
+  List<Player> jugadoresCoincidentes = [];
+
+  for (var jugador in jugadores) {
+    if (jugador.cartas.any((carta) => carta.valor == cartaFinal.valor)) {
+      jugadoresCoincidentes.add(jugador);
+    }
+  }
+
+  return jugadoresCoincidentes;
 }
 
 void asignarCartaFinal(List<Player> jugadores) {
@@ -137,6 +162,8 @@ void asignarCartaFinal(List<Player> jugadores) {
           "Cartas asignadas a ${jugador.name}: ${cartasAsignadas.map((c) => c.toString()).join(', ')}");
     }
   }
+
+  
 
   List<List<Carta?>> piramide = [];
   List<Carta> cartasRestantes = [];

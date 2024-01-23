@@ -95,24 +95,23 @@ void _onVoltearCartaPressed(BuildContext context, WidgetRef ref) {
   final barajaNotifier = ref.read(barajaProvider.notifier);
   final jugadores = ref.read(playerProvider);
 
-  print('Volteando carta...');
+  // Esta lista contendrá todos los jugadores que coincidan con la carta final.
+  List<Player> jugadoresCoincidentes = [];
 
-  Player? jugadorCoincidente = encontrarJugadorCoincidente(jugadores, barajaNotifier.cartaFinal);
-
-  while (jugadorCoincidente == null && barajaNotifier.cartaFinal != null && !barajaNotifier.state.cartas.isEmpty) {
+  // Intente encontrar coincidencias hasta que encuentre al menos una.
+  do {
     barajaNotifier.asignarCartaFinal(jugadores);
-    jugadorCoincidente = encontrarJugadorCoincidente(jugadores, barajaNotifier.cartaFinal);
-    print('Buscando coincidencia...');
-  }
+    jugadoresCoincidentes = barajaNotifier.encontrarJugadoresCoincidentes(barajaNotifier.cartaFinal!, jugadores);
+  } while (jugadoresCoincidentes.isEmpty && barajaNotifier.state.cartas.isNotEmpty);
 
-  if (jugadorCoincidente != null && barajaNotifier.cartaFinal != null) {
-    print('Coincidencia encontrada: ${jugadorCoincidente.name}');
+  // Si hay jugadores coincidentes, pase la lista a la pantalla final.
+  if (jugadoresCoincidentes.isNotEmpty && barajaNotifier.cartaFinal != null) {
     GoRouter.of(context).go('/resultadofinal', extra: {
       'cartaFinal': barajaNotifier.cartaFinal,
-      'jugador': jugadorCoincidente
+      'jugadoresCoincidentes': jugadoresCoincidentes,
     });
   } else {
-    print('No se encontraron coincidencias o se han agotado las cartas.');
+    // Muestre un mensaje si no hay cartas o no se encontraron coincidencias.
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('No se encontraron coincidencias o se han agotado las cartas.'),

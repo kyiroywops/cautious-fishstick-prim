@@ -56,6 +56,8 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
     }
 
     final Size screenSize = MediaQuery.of(context).size;
+    final bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+
 
 
     return Scaffold(
@@ -98,7 +100,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 35, 10, 0),
                       child: Container(
-                        height: screenSize.height * 0.3, // Ajusta esta altura según tus necesidades
+                        height: screenSize.height * 0.2, // Ajusta esta altura según tus necesidades
           
                         child: GridView.builder(
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -199,7 +201,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
           
                  
                   
-                  SizedBox(height: screenSize.height * 0.03),
+                
           
                   Center(
                     child: Text(
@@ -252,39 +254,50 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
               ),
             ),
           ),
-                Positioned(
-                right: screenSize.width * 0.05, // 5% del ancho de la pantalla
-                bottom: screenSize.height * 0.05, // 5% del alto de la pantalla
-               
+                isKeyboardVisible 
+                ? SizedBox.shrink()
+                : 
+                  Positioned(
+                    right: screenSize.width * 0.05,
+                    bottom: screenSize.height * 0.05,
                   
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                          ref.read(playerProvider.notifier);
-                          
-                        // Opcional: Imprimir la información de los jugadores
-                        final updatedPlayers = ref.read(playerProvider);
-                        for (var player in updatedPlayers) {
-                          print('Jugador: ${player.name}');
-                        }
-                          
-                        // Navegar a la pantalla de reglas
-                        gameMode == GameMode.custom
-                            ? GoRouter.of(context).go('/parametros')
-                            : GoRouter.of(context).go('/cartasasignadas');
-                      
-                    },
-                  icon: Icon(Icons.play_arrow, color: Colors.white), // Icono de jugar
-                      label: Text('Jugar', style: TextStyle(color: Colors.white)),
-                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      textStyle: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w600),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                     ),
+                  
+                  
+                  
+                                 
+                    
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                            ref.read(playerProvider.notifier);
+                            
+                          // Opcional: Imprimir la información de los jugadores
+                          final updatedPlayers = ref.read(playerProvider);
+                          for (var player in updatedPlayers) {
+                            print('Jugador: ${player.name}');
+                          }
+                            
+                          // Navegar a la pantalla de reglas
+                          gameMode == GameMode.custom
+                              ? GoRouter.of(context).go('/parametros')
+                              : GoRouter.of(context).go('/cartasasignadas');
+                        
+                      },
+                  icon: Icon(Icons.play_arrow, color: Colors.white),
+                                label: Text('Jugar', style: TextStyle(color: Colors.white)),
+                                style: ElevatedButton.styleFrom(
+                  primary: Colors.black,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenSize.width * 0.05, // 5% del ancho de la pantalla
+                    vertical: screenSize.height * 0.01, // 1% del alto de la pantalla
                   ),
-                )
+                  textStyle: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w600),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                       ),
+                    ),
+                  ),
+                
         ],
       ),
     );

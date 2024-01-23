@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:piramjuego/infrastructure/models/carta_model.dart';
+import 'package:piramjuego/infrastructure/models/player_models.dart';
+import 'package:piramjuego/presentation/providers/baraja_provider.dart';
+import 'package:piramjuego/presentation/providers/player_provider.dart';
 
-class FinalScreen extends StatelessWidget {
+class FinalScreen extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Obtiene la carta final actual y la lista de jugadores
+    final barajaNotifier = ref.watch(barajaProvider.notifier);
+    final jugadores = ref.watch(playerProvider);
+    final cartaFinal = barajaNotifier.cartaFinal;
+
     return Scaffold(
       backgroundColor: Colors.black, // Fondo de pantalla beige
       body: Center(
@@ -29,22 +39,21 @@ class FinalScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20), // Espacio entre texto y botón
-          ElevatedButton(
-            onPressed: () {
-              // Acción del botón
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white, // Fondo negro
-              foregroundColor: Colors.black, // Texto en blanco
-            ),
-            child: Text(
-              'Voltear carta',
-              style: TextStyle(
-                fontFamily: 'Lexend',
-                fontWeight: FontWeight.w600,
+              ElevatedButton(
+                onPressed: () => _onVoltearCartaPressed(
+                    context, ref, jugadores, barajaNotifier),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white, // Fondo negro
+                  foregroundColor: Colors.black, // Texto en blanco
+                ),
+                child: Text(
+                  'Voltear carta',
+                  style: TextStyle(
+                    fontFamily: 'Lexend',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-            ),
-          ),
             ],
           ),
         ),
@@ -53,21 +62,50 @@ class FinalScreen extends StatelessWidget {
   }
 }
 
-
-  Widget _buildFinalCardContainer() {
-    // Este método construirá el contenedor para la carta final.
-    // Puedes personalizar la apariencia como quieras, aquí hay un ejemplo simple:
-   return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        width: 55,
-        height: 35,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          image: DecorationImage(
-            image: AssetImage('assets/images/cartas/cartafinal.png'),
-          ),
+Widget _buildFinalCardContainer() {
+  // Este método construirá el contenedor para la carta final.
+  // Puedes personalizar la apariencia como quieras, aquí hay un ejemplo simple:
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      width: 55,
+      height: 35,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        image: DecorationImage(
+          image: AssetImage('assets/images/cartas/cartafinal.png'),
         ),
       ),
-    );
+    ),
+  );
+}
+
+void _onVoltearCartaPressed(BuildContext context, WidgetRef ref,
+    List<Player> jugadores, BarajaNotifier barajaNotifier) {
+  // Verifica la coincidencia de la carta final con las cartas de los jugadores
+
+  //   Player? jugadorCoincidente = encontrarJugadorCoincidente(jugadores, barajaNotifier.cartaFinal);
+
+  //   if (jugadorCoincidente != null) {
+  //     // Si hay coincidencia, muestra el resultado y navega a la pantalla de resultado
+  //     Navigator.of(context).push(MaterialPageRoute(
+  //       builder: (context) => ResultadoFinalScreen(cartaFinal: barajaNotifier.cartaFinal, jugador: jugadorCoincidente),
+  //     ));
+  //   } else {
+  //     // Si no hay coincidencia, asigna una nueva carta final y actualiza la pantalla
+  //     barajaNotifier.asignarCartaFinal(jugadores);
+  //     ref.refresh(barajaProvider);
+  //     // Actualiza la interfaz de usuario para reflejar la nueva carta final
+  //   }
+  // }
+
+  Player? encontrarJugadorCoincidente(
+      List<Player> jugadores, Carta cartaFinal) {
+    for (var jugador in jugadores) {
+      if (jugador.cartas.any((carta) => carta.valor == cartaFinal.valor)) {
+        return jugador;
+      }
+    }
+    return null;
   }
+}

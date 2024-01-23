@@ -50,15 +50,7 @@ class CartasAsignadasScreen extends ConsumerWidget {
                     padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
                     child: BotonAtras(),
                   ),
-                  ElevatedButton(
-                    onPressed: onGenerateAndAssignPressed ,
-                    child: Text('Generar y Asignar Cartas', style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Lexend',
-                              fontWeight: FontWeight.w600), // Letra blanca
-                        
-                    ),
-                  ),
+                  
                 ],
               ),
             ),
@@ -107,33 +99,39 @@ class CartasAsignadasScreen extends ConsumerWidget {
               },
             )
           ),
+   
+            // Sección de botones
           Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: ElevatedButton(
-                onPressed: () {
-                 
-                      GoRouter.of(context).go('/juego');
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Jugar',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Lexend',
-                        fontWeight: FontWeight.w600), // Letra blanca
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, // Alinear horizontalmente
+              children: [
+                // Botón de Asignar Cartas
+                ElevatedButton.icon(
+                  onPressed: onGenerateAndAssignPressed,
+                  icon: Icon(Icons.refresh, color: Colors.white), // Icono de girar
+                  label: Text('Asignar Cartas', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black, // Fondo negro
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.onPrimary, // Fondo negro
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30), // Bordes redondeados
+
+                // Botón de Jugar con Icono
+                ElevatedButton.icon(
+                  onPressed: () {
+                    GoRouter.of(context).go('/juego');
+                  },
+                  icon: Icon(Icons.play_arrow, color: Colors.white), // Icono de jugar
+                  label: Text('Jugar', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black, // Fondo negro
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   ),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 44, vertical: 10), // Padding interior del botón
                 ),
-              ),
-          )
+              ],
+            ),
+          ),
         ],
       ),
     );

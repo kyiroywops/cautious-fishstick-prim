@@ -45,22 +45,40 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
   Carta? cartaFinal; // Añade esto como un campo en la clase BarajaNotifier
 
-
   void generarYAsignarCartas(List<Player> jugadores, int cartasPorJugador,
       bool sorbosX2, int numerodebarajas, int numerodePisos) {
     generarYBarajarMazo(numerodebarajas);
     asignarCartasAJugadores(jugadores, cartasPorJugador);
-    asignarCartaFinal();
+    asignarCartaFinal(jugadores);
     iniciarJuegoPiramide(sorbosX2, numerodePisos);
   }
 
-  void asignarCartaFinal() {
-    if (state.cartas.isNotEmpty) {
-      cartaFinal = sacarCarta();
-      print("Carta final asignada: $cartaFinal");
-    } else {
-      print("No hay más cartas en la baraja para asignar como carta final");
-    }
+ void asignarCartaFinal(List<Player> jugadores) {
+    Carta nuevaCartaFinal;
+    bool hayCoincidencia;
+
+    do {
+      if (state.cartas.isEmpty) {
+        throw Exception('No hay más cartas en la baraja');
+      }
+
+      // Obtiene una nueva carta final del mazo.
+      nuevaCartaFinal = sacarCarta();
+      hayCoincidencia = tieneCoincidencia(nuevaCartaFinal, jugadores);
+
+      // Si hay coincidencia, asigna la carta final y termina el bucle.
+      if (hayCoincidencia) {
+        cartaFinal = nuevaCartaFinal;
+        print("Carta final asignada: $cartaFinal");
+      }
+    } while (!hayCoincidencia);
+
+    // Notifica a los observadores del cambio en el estado de la carta final.
+    state = Baraja(
+        cartasPredefinidas: List<Carta>.from(state.cartas),
+        piramideInicial: List<List<Carta?>>.from(
+            piramide.map((nivel) => List<Carta?>.from(nivel)))
+    );
   }
 
   String reglaActual = ''; // Añade un campo para la regla actual
@@ -137,8 +155,8 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
   List<Carta> cartasVolteadas = [];
   ValueNotifier<bool> reconstruir = ValueNotifier(false);
-  bool cartaFinalVolteada = false; // Añade esto para rastrear el estado de la última carta
-
+  bool cartaFinalVolteada =
+      false; // Añade esto para rastrear el estado de la última carta
 
   void voltearCartaEnPiramide(int nivel, int posicion, List<Player> jugadores) {
     print("Intentando voltear carta en nivel $nivel, posición $posicion");
@@ -157,7 +175,7 @@ class BarajaNotifier extends StateNotifier<Baraja> {
         if (carta == piramide[0][0]) {
           cartaFinalVolteada = true;
         }
-        print ("Carta final volteada: $cartaFinalVolteada");
+        print("Carta final volteada: $cartaFinalVolteada");
 
         // Si forzarCarta está activo y no hay coincidencia, agregar una nueva carta a la misma posición
         if (forzarCarta && !tieneCoincidencia(carta, jugadores)) {
@@ -188,6 +206,10 @@ void generarReglas(int totalNiveles, {bool sorbosX2 = false}) {
 
     String accion = (totalNiveles - nivel) % 2 == 0 ? "Regalas" : "Tomas";
     String sorboPlural = cantidad == 1 ? "sorbo" : "sorbos";
+
+    if (nivel == 0) {
+      sorboPlural = "Regala un vaso al seco ";
+    }
 
     return "$accion $cantidad $sorboPlural";
   }).reversed.toList();

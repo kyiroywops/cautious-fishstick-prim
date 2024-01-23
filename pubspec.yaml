@@ -11,9 +11,10 @@ dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
   flutter_riverpod: ^2.4.9
+  font_awesome_flutter: ^10.6.0
   go_router: ^13.0.0
   playing_cards: ^0.4.1+11
-  url_launcher: ^6.2.2
+  url_launcher: ^6.2.4
   video_player: ^2.8.1
 
 dev_dependencies:
@@ -25,7 +26,7 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/icons/icon1024.png"
-  
+
 flutter:
   uses-material-design: true
   assets:
@@ -33,8 +34,6 @@ flutter:
     - assets/images/avatars/
     - assets/images/cartas/
     - assets/images/videos/
-
-
 
   fonts:
     - family: ReadexPro

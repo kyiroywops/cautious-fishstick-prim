@@ -61,15 +61,19 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/resultadofinal',
       builder: (BuildContext context, GoRouterState state) {
-        // Asegúrate de que 'extra' es un mapa con las claves 'cartaFinal' y 'jugador'
-        final mapa = state.extra as Map<String, dynamic>;
-        final Carta? cartaFinal = mapa['cartaFinal'] as Carta?;
-        final Player? jugadorCoincidente = mapa['jugador'] as Player?;
-        
-        // Ahora puedes pasar estos objetos a ResultadoFinalScreen
-        return ResultadoFinalScreen(cartaFinal: cartaFinal!, jugador: jugadorCoincidente);
+        final mapa = state.extra as Map<String, dynamic>?; // Asegúrate de que extra no es nulo
+        final Carta? cartaFinal = mapa?['cartaFinal'] as Carta?;
+        final List<Player> jugadoresCoincidentes = (mapa?['jugadoresCoincidentes'] as List<dynamic>?)
+            ?.map((e) => e as Player)
+            .toList() ?? []; // Convierte la lista dinámica en una lista de Player
+
+        return ResultadoFinalScreen(
+          cartaFinal: cartaFinal!,
+          jugadoresCoincidentes: jugadoresCoincidentes,
+        );
       },
     ),
+
 
 
 

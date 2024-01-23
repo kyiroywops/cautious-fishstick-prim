@@ -27,6 +27,8 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     return false;
   }
 
+  
+
   void reemplazarCartaEnPiramide(int nivel, int posicion) {
     if (nivel < piramide.length && posicion < piramide[nivel].length) {
       Carta nuevaCarta = sacarCarta();
@@ -53,33 +55,41 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     iniciarJuegoPiramide(sorbosX2, numerodePisos);
   }
 
- void asignarCartaFinal(List<Player> jugadores) {
-    Carta nuevaCartaFinal;
-    bool hayCoincidencia;
+List<Player> encontrarJugadoresCoincidentes(Carta carta, List<Player> jugadores) {
+  return jugadores.where((jugador) => 
+    jugador.cartas.any((cartaJugador) => carta.valor == cartaJugador.valor)
+  ).toList();
+}
 
-    do {
-      if (state.cartas.isEmpty) {
-        throw Exception('No hay más cartas en la baraja');
-      }
+void asignarCartaFinal(List<Player> jugadores) {
+  Carta nuevaCartaFinal;
+  List<Player> jugadoresCoincidentes;
 
-      // Obtiene una nueva carta final del mazo.
-      nuevaCartaFinal = sacarCarta();
-      hayCoincidencia = tieneCoincidencia(nuevaCartaFinal, jugadores);
+  do {
+    if (state.cartas.isEmpty) {
+      print('No hay más cartas en la baraja');
+      throw Exception('No hay más cartas en la baraja');
+    }
 
-      // Si hay coincidencia, asigna la carta final y termina el bucle.
-      if (hayCoincidencia) {
-        cartaFinal = nuevaCartaFinal;
-        print("Carta final asignada: $cartaFinal");
-      }
-    } while (!hayCoincidencia);
+    nuevaCartaFinal = sacarCarta();
+    print('Carta sacada: ${nuevaCartaFinal.toString()}');
 
-    // Notifica a los observadores del cambio en el estado de la carta final.
-    state = Baraja(
-        cartasPredefinidas: List<Carta>.from(state.cartas),
-        piramideInicial: List<List<Carta?>>.from(
-            piramide.map((nivel) => List<Carta?>.from(nivel)))
-    );
-  }
+    jugadoresCoincidentes = encontrarJugadoresCoincidentes(nuevaCartaFinal, jugadores);
+    print('Jugadores coincidentes: ${jugadoresCoincidentes.map((j) => j.name).join(', ')}');
+
+  } while (jugadoresCoincidentes.isEmpty);
+
+  cartaFinal = nuevaCartaFinal;
+  print("Carta final asignada: ${cartaFinal.toString()}");
+  
+  // Notifica a los observadores del cambio en el estado de la carta final.
+  state = Baraja(
+    cartasPredefinidas: List<Carta>.from(state.cartas),
+    piramideInicial: List<List<Carta?>>.from(
+      piramide.map((nivel) => List<Carta?>.from(nivel))
+    )
+  );
+}
 
   String reglaActual = ''; // Añade un campo para la regla actual
 

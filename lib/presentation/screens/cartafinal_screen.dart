@@ -81,36 +81,43 @@ Widget _buildFinalCardContainer() {
   );
 }
 
-  void _onVoltearCartaPressed(BuildContext context, WidgetRef ref) {
-    final barajaNotifier = ref.read(barajaProvider.notifier);
-    final jugadores = ref.read(playerProvider);
-
-    Player? jugadorCoincidente = encontrarJugadorCoincidente(jugadores, barajaNotifier.cartaFinal);
-
-    // Si no hay coincidencia, asigna una nueva carta final
-    if (jugadorCoincidente == null && barajaNotifier.cartaFinal != null) {
-      do {
-        barajaNotifier.asignarCartaFinal(jugadores);
-        jugadorCoincidente = encontrarJugadorCoincidente(jugadores, barajaNotifier.cartaFinal);
-      } while (jugadorCoincidente == null);
+Player? encontrarJugadorCoincidente(List<Player> jugadores, Carta? cartaFinal) {
+  if (cartaFinal == null) return null;
+  for (var jugador in jugadores) {
+    if (jugador.cartas.any((carta) => carta.valor == cartaFinal.valor)) {
+      return jugador;
     }
+  }
+  return null;
+}
 
-    // Navega a la pantalla de resultado con los parámetros necesarios
-    if (jugadorCoincidente != null && barajaNotifier.cartaFinal != null) {
-      GoRouter.of(context).go('/resultadofinal', extra: {
+void _onVoltearCartaPressed(BuildContext context, WidgetRef ref) {
+  final barajaNotifier = ref.read(barajaProvider.notifier);
+  final jugadores = ref.read(playerProvider);
+
+  print('Volteando carta...');
+
+  Player? jugadorCoincidente = encontrarJugadorCoincidente(jugadores, barajaNotifier.cartaFinal);
+
+  while (jugadorCoincidente == null && barajaNotifier.cartaFinal != null && !barajaNotifier.state.cartas.isEmpty) {
+    barajaNotifier.asignarCartaFinal(jugadores);
+    jugadorCoincidente = encontrarJugadorCoincidente(jugadores, barajaNotifier.cartaFinal);
+    print('Buscando coincidencia...');
+  }
+
+  if (jugadorCoincidente != null && barajaNotifier.cartaFinal != null) {
+    print('Coincidencia encontrada: ${jugadorCoincidente.name}');
+    GoRouter.of(context).go('/resultadofinal', extra: {
       'cartaFinal': barajaNotifier.cartaFinal,
       'jugador': jugadorCoincidente
     });
-      // Considera cómo manejarás el 'jugador' en la pantalla de resultado
-    }
+  } else {
+    print('No se encontraron coincidencias o se han agotado las cartas.');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('No se encontraron coincidencias o se han agotado las cartas.'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
-
-  Player? encontrarJugadorCoincidente(List<Player> jugadores, Carta? cartaFinal) {
-    if (cartaFinal == null) return null;
-    for (var jugador in jugadores) {
-      if (jugador.cartas.any((carta) => carta.valor == cartaFinal.valor)) {
-        return jugador;
-      }
-    }
-    return null;
-  }
+}

@@ -204,14 +204,15 @@ void generarReglas(int totalNiveles, {bool sorbosX2 = false}) {
       cantidad *= 2; // Duplica la cantidad si sorbosX2 es verdadero
     }
 
-    String accion = (totalNiveles - nivel) % 2 == 0 ? "Regalas" : "Tomas";
-    String sorboPlural = cantidad == 1 ? "sorbo" : "sorbos";
-
-    if (nivel == 0) {
-      sorboPlural = "Regala un vaso al seco ";
+    if (nivel == totalNiveles - 1) {
+      // En el último nivel, personaliza la regla aquí.
+      return "Regala un vaso al seco";
+    } else {
+      // Para otros niveles, sigue la lógica de "Regalas" o "Tomas"
+      String accion = (totalNiveles - nivel) % 2 == 0 ? "Regalas" : "Tomas";
+      String sorboPlural = cantidad == 1 ? "sorbo" : "sorbos";
+      return "$accion $cantidad $sorboPlural";
     }
-
-    return "$accion $cantidad $sorboPlural";
   }).reversed.toList();
 }
 

@@ -58,6 +58,9 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
     final Size screenSize = MediaQuery.of(context).size;
     final bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
+    bool _showAddedMessage = false;
+    String _addedPlayerName = '';
+
 
 
     return Scaffold(
@@ -190,7 +193,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                               vertical:
                                   10),
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.add_circle, color: Colors.white),
+                            icon: Icon(Icons.add_circle_rounded, color: Colors.white),
                             onPressed: players.length >= 20 ? null : _addPlayer,
                           ), // Padding vertical para el texto dentro del input
                         ),
@@ -256,7 +259,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
           ),
                 isKeyboardVisible 
                 ? SizedBox.shrink()
-                : 
+                :
                   Positioned(
                     right: screenSize.width * 0.05,
                     bottom: screenSize.height * 0.05,

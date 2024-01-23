@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:piramjuego/infrastructure/models/carta_model.dart';
 import 'package:piramjuego/infrastructure/models/player_models.dart';
 import 'package:piramjuego/presentation/providers/baraja_provider.dart';
@@ -41,7 +42,7 @@ class FinalScreen extends ConsumerWidget {
               SizedBox(height: 20), // Espacio entre texto y botón
               ElevatedButton(
                 onPressed: () => _onVoltearCartaPressed(
-                    context, ref, jugadores, barajaNotifier),
+                    context, ref),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white, // Fondo negro
                   foregroundColor: Colors.black, // Texto en blanco
@@ -80,27 +81,32 @@ Widget _buildFinalCardContainer() {
   );
 }
 
-void _onVoltearCartaPressed(BuildContext context, WidgetRef ref,
-    List<Player> jugadores, BarajaNotifier barajaNotifier) {
-  // Verifica la coincidencia de la carta final con las cartas de los jugadores
+  void _onVoltearCartaPressed(BuildContext context, WidgetRef ref) {
+    final barajaNotifier = ref.read(barajaProvider.notifier);
+    final jugadores = ref.read(playerProvider);
 
-  //   Player? jugadorCoincidente = encontrarJugadorCoincidente(jugadores, barajaNotifier.cartaFinal);
+    Player? jugadorCoincidente = encontrarJugadorCoincidente(jugadores, barajaNotifier.cartaFinal);
 
-  //   if (jugadorCoincidente != null) {
-  //     // Si hay coincidencia, muestra el resultado y navega a la pantalla de resultado
-  //     Navigator.of(context).push(MaterialPageRoute(
-  //       builder: (context) => ResultadoFinalScreen(cartaFinal: barajaNotifier.cartaFinal, jugador: jugadorCoincidente),
-  //     ));
-  //   } else {
-  //     // Si no hay coincidencia, asigna una nueva carta final y actualiza la pantalla
-  //     barajaNotifier.asignarCartaFinal(jugadores);
-  //     ref.refresh(barajaProvider);
-  //     // Actualiza la interfaz de usuario para reflejar la nueva carta final
-  //   }
-  // }
+    // Si no hay coincidencia, asigna una nueva carta final
+    if (jugadorCoincidente == null && barajaNotifier.cartaFinal != null) {
+      do {
+        barajaNotifier.asignarCartaFinal(jugadores);
+        jugadorCoincidente = encontrarJugadorCoincidente(jugadores, barajaNotifier.cartaFinal);
+      } while (jugadorCoincidente == null);
+    }
 
-  Player? encontrarJugadorCoincidente(
-      List<Player> jugadores, Carta cartaFinal) {
+    // Navega a la pantalla de resultado con los parámetros necesarios
+    if (jugadorCoincidente != null && barajaNotifier.cartaFinal != null) {
+      GoRouter.of(context).go('/resultadofinal', extra: {
+      'cartaFinal': barajaNotifier.cartaFinal,
+      'jugador': jugadorCoincidente
+    });
+      // Considera cómo manejarás el 'jugador' en la pantalla de resultado
+    }
+  }
+
+  Player? encontrarJugadorCoincidente(List<Player> jugadores, Carta? cartaFinal) {
+    if (cartaFinal == null) return null;
     for (var jugador in jugadores) {
       if (jugador.cartas.any((carta) => carta.valor == cartaFinal.valor)) {
         return jugador;
@@ -108,4 +114,3 @@ void _onVoltearCartaPressed(BuildContext context, WidgetRef ref,
     }
     return null;
   }
-}

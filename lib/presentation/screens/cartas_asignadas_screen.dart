@@ -6,11 +6,13 @@ import 'package:piramjuego/infrastructure/models/carta_model.dart' as my;
 import 'package:piramjuego/presentation/providers/baraja_provider.dart';
 import 'package:piramjuego/presentation/providers/barajascantidad_provider.dart';
 import 'package:piramjuego/presentation/providers/cartasporjugador_provider.dart';
+import 'package:piramjuego/presentation/providers/gamemode_provider.dart';
 import 'package:piramjuego/presentation/providers/numerodepisos_provider.dart';
 import 'package:piramjuego/presentation/providers/player_provider.dart'; // Importa tu playerProvider
 import 'package:piramjuego/presentation/providers/sorbos_provider.dart';
 import 'package:piramjuego/presentation/widgets/boton_atras.dart';
 import 'package:playing_cards/playing_cards.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class CartasAsignadasScreen extends ConsumerWidget {
@@ -22,6 +24,19 @@ class CartasAsignadasScreen extends ConsumerWidget {
     final numeroDeBarajas = ref.read(numeroBarajasProvider.state).state;
     final numerodePisos = ref.read(pisoProvider.state).state;
 
+    final String discordUrl = 'https://discord.gg/tuComunidad';
+
+  // Método para abrir el enlace de Discord
+    void _launchDiscord(BuildContext context) async {
+    if (await canLaunch(discordUrl)) {
+      await launch(discordUrl);
+    } else {
+      // Mostrar error o manejar la situación
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No se pudo abrir el enlace de Discord')),
+      );
+    }
+  }
 
 
 
@@ -32,108 +47,135 @@ class CartasAsignadasScreen extends ConsumerWidget {
     ref.read(playerProvider.notifier).setPlayers(jugadores);
   }
 
+    final gameMode = ref.watch(gameModeProvider.state).state;
+
     
     return Scaffold(
  
       backgroundColor: Theme.of(context).colorScheme.onBackground,
-
-      body: Column(
-        
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: SafeArea(
-              bottom: false,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
-                    child: BotonAtras(),
-                  ),
-                  
-                ],
-              ),
+       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.onBackground,
+        leading: BotonAtras(),
+        actions: [
+          Container(
+            margin: EdgeInsets.only(
+                right: 8), // Espacio entre el contenedor y el botón de Discord
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.brown.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Text(
+              gameMode == GameMode.custom ? 'Personalizada' : 'Rápida',
+              style: TextStyle(color:Colors.white,  fontFamily: 'Lexend')
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: jugadores.length,
-              itemBuilder: (context, index) {
-                final jugador = jugadores[index];
-                print("Mostrando cartas de ${jugador.name}: ${jugador.cartas.map((c) => c.toString()).join(', ')}");
-
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: AssetImage(jugador.avatar),
-                      radius: 30,
-                    ),
-                    title: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(jugador.name, style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Lexend',
-                          fontWeight: FontWeight.w800,
-                          fontSize: 17
-                          ), 
-                          
-                          // Letra blanca
-                      ),
-                    ),
-                    subtitle: jugador.cartas.isNotEmpty
-                   ? Row(
-                            children: jugador.cartas
-                                .map((c) => _buildPlayingCard(c))
-                                .toList(),
-                          )
-                        : Text("Sin cartas", style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Lexend',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 17
-                          
-                        ),),
-                  ),
-                );
-              },
-            )
-          ),
-   
-            // Sección de botones
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, // Alinear horizontalmente
-              children: [
-                // Botón de Asignar Cartas
-                ElevatedButton.icon(
-                  onPressed: onGenerateAndAssignPressed,
-                  icon: Icon(Icons.refresh, color: Colors.white), // Icono de girar
-                  label: Text('Asignar Cartas', style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.black, // Fondo negro
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  ),
-                ),
-
-                // Botón de Jugar con Icono
-                ElevatedButton.icon(
-                  onPressed: () {
-                    GoRouter.of(context).go('/juego');
-                  },
-                  icon: Icon(Icons.play_arrow, color: Colors.white), // Icono de jugar
-                  label: Text('Jugar', style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.black, // Fondo negro
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  ),
-                ),
-              ],
+            padding: const EdgeInsets.only(right: 20.0),
+            child: IconButton(
+              icon: Icon(Icons.discord, color: Colors.white),
+              onPressed: () => _launchDiscord(context),
             ),
           ),
         ],
       ),
+
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+          
+            child: Column(
+              
+              children: [
+             
+                
+                  ListView.builder(
+                    itemCount: jugadores.length,
+                    padding: EdgeInsets.zero, // Establece el padding a cero
+          
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+          
+                    itemBuilder: (context, index) {
+                      final jugador = jugadores[index];
+                      print("Mostrando cartas de ${jugador.name}: ${jugador.cartas.map((c) => c.toString()).join(', ')}");
+            
+                      return Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: AssetImage(jugador.avatar),
+                            radius: 30,
+                          ),
+                          title: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(jugador.name, style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Lexend',
+                                fontWeight: FontWeight.w800,
+                                fontSize: 17
+                                ), 
+                                
+                                // Letra blanca
+                            ),
+                          ),
+                          subtitle: jugador.cartas.isNotEmpty
+                         ? Row(
+                                  children: jugador.cartas
+                                      .map((c) => _buildPlayingCard(c))
+                                      .toList(),
+                                )
+                              : Text("Sin cartas", style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Lexend',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 17
+                                
+                              ),),
+                        ),
+                      );
+                    },
+                  ),
+                
+               
+              ],
+            ),
+          ),
+             Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Botón Asignar Cartas
+                  ElevatedButton.icon(
+                    onPressed: onGenerateAndAssignPressed,
+                    icon: Icon(Icons.refresh, color: Colors.white),
+                    label: Text('Asignar Cartas', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    ),
+                  ),
+                  // Botón Jugar
+                  ElevatedButton.icon(
+                    onPressed: () => GoRouter.of(context).go('/juego'),
+                    icon: Icon(Icons.play_arrow, color: Colors.white),
+                    label: Text('Jugar', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          
+        ],
+      ),
+      
     );
   }
 }

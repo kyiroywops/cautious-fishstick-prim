@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,7 @@ import 'package:piramjuego/infrastructure/models/carta_model.dart' as my;
 import 'package:piramjuego/presentation/providers/baraja_provider.dart';
 import 'package:piramjuego/presentation/providers/barajascantidad_provider.dart';
 import 'package:piramjuego/presentation/providers/cartasporjugador_provider.dart';
+import 'package:piramjuego/presentation/providers/confetti_provider.dart';
 import 'package:piramjuego/presentation/providers/numerodepisos_provider.dart';
 import 'package:piramjuego/presentation/providers/player_provider.dart';
 import 'package:piramjuego/presentation/providers/sorbos_provider.dart';
@@ -21,6 +23,7 @@ class ResultadoFinalScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final paddingTop = screenHeight * 0.20;
@@ -40,11 +43,37 @@ class ResultadoFinalScreen extends ConsumerWidget {
       ref.read(barajaProvider.notifier).generarYAsignarCartas(jugadores,
           cartasPorJugador, sorbosX2, numeroDeBarajas, numerodePisos);
     }
+     final confettiController = ref.watch(confettiControllerProvider);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      confettiController.play();
+    });
+
 
     return Scaffold(
       backgroundColor: Colors.black26,
       body: Stack(
         children: [
+           // Añade esto para mostrar el confeti
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              particleDrag: 0.05,
+              emissionFrequency: 0.05,
+              numberOfParticles: 20,
+              gravity: 0.05,
+              shouldLoop: false,
+              colors: const [
+                Colors.green,
+                Colors.blue,
+                Colors.pink,
+                Colors.orange,
+                Colors.purple
+              ], // Manually specify the colors to be used
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(top: paddingTop),
             child: Center(

@@ -48,6 +48,7 @@ class BarajaNotifier extends StateNotifier<Baraja> {
     print("Juego reseteado");
   }
 
+
   void reemplazarCartaEnPiramide(int nivel, int posicion) {
     if (nivel < piramide.length && posicion < piramide[nivel].length) {
       Carta nuevaCarta = sacarCarta();

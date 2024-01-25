@@ -24,9 +24,11 @@ class ResultadoFinalScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
 
+    
+
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    final paddingTop = screenHeight * 0.20;
+    final paddingTop = screenHeight * 0.05;
     final paddingTopBoton = screenHeight * 0.08;
     final paddingRight = screenWidth * 0.05;
 
@@ -59,20 +61,11 @@ class ResultadoFinalScreen extends ConsumerWidget {
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
               confettiController: confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              particleDrag: 0.05,
-              emissionFrequency: 0.05,
-              numberOfParticles: 20,
-              gravity: 0.05,
-              shouldLoop: false,
-              colors: const [
-                Colors.green,
-                Colors.blue,
-                Colors.pink,
-                Colors.orange,
-                Colors.purple
-              ], // Manually specify the colors to be used
-            ),
+              blastDirectionality: BlastDirectionality.explosive, // Otra opción es directional
+              emissionFrequency: 0.6, // Con qué frecuencia se dispara el confeti
+              numberOfParticles: 50, // Cantidad de confeti
+              gravity: 0.3, // Ajusta la gravedad para que caiga más rápido o más lento
+            )
           ),
           Padding(
             padding: EdgeInsets.only(top: paddingTop),
@@ -81,8 +74,30 @@ class ResultadoFinalScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Text(
+                        'La carta final es',
+                        style: TextStyle(
+                            fontSize: 28,
+                            color: Colors.white,
+                            fontFamily: 'Lexend',
+                            fontWeight: FontWeight.w900),
+                      ),
+                    ),
                     _buildPlayingCard(cartaFinal, context, isLarge: true),
                     SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Jugadores que coinciden',
+                        style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.white,
+                            fontFamily: 'Lexend',
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
                     if (jugadoresCoincidentes.isNotEmpty)
                       ...jugadoresCoincidentes
                           .map((jugador) =>
@@ -124,19 +139,31 @@ class ResultadoFinalScreen extends ConsumerWidget {
   Widget _buildJugadorContainer(Player jugador, BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
+      
       child: Column(
         children: [
-          CircleAvatar(
-            backgroundImage: AssetImage(jugador.avatar),
-            radius: 30,
-          ),
-          Text(
-            jugador.name,
-            style: TextStyle(
-                fontSize: 21,
-                color: Colors.white,
-                fontFamily: 'Lexend',
-                fontWeight: FontWeight.w700),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage(jugador.avatar),
+                  radius: 30,
+                ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                jugador.name,
+                style: TextStyle(
+                    fontSize: 21,
+                    color: Colors.white,
+                    fontFamily: 'Lexend',
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+              ],
+            ),
           ),
           Wrap(
             alignment: WrapAlignment.center,

@@ -25,24 +25,24 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
     final gameMode = ref.watch(gameModeProvider.state).state;
 
     void _addPlayer() {
-      if (players.length >= 30) {
-        // Mostrar algún mensaje de error o deshabilitar el botón de agregar
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('No se pueden agregar más de 30 jugadores')),
-        );
-        return;
-      }
+  if (players.length >= 10) {
+    // Muestra el alerta cuando se alcanza el límite de jugadores
+    _showMaxPlayersAlert(context);
+    return;
+  }
 
-      final String name = _nameController.text;
-      if (name.isNotEmpty && _selectedAvatar.isNotEmpty) {
-        ref.read(playerProvider.notifier).addPlayer(
-              Player(
-                  name: name, avatar: _selectedAvatar),
-            );
-        _nameController.clear();
-        _selectedAvatar = 'assets/images/avatars/avatar1.png';
-      }
-    }
+  final String name = _nameController.text;
+  if (name.isNotEmpty && _selectedAvatar.isNotEmpty) {
+    ref.read(playerProvider.notifier).addPlayer(
+      Player(name: name, avatar: _selectedAvatar),
+    );
+    _nameController.clear();
+    _selectedAvatar = 'assets/images/avatars/avatar1.png';
+    
+    // Muestra el alerta de jugador agregado
+    _showPlayerAddedAlert(context);
+  }
+}
 
     // Cuando el usuario selecciona un número de vidas, actualizamos el estado local y el provider
     void _handleLifeSelection(int numLives) {
@@ -58,8 +58,6 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
     final Size screenSize = MediaQuery.of(context).size;
     final bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
-    bool _showAddedMessage = false;
-    String _addedPlayerName = '';
 
 
 
@@ -101,105 +99,113 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                  
                
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 35, 10, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 35, 10, 20),
                       child: Container(
                         height: screenSize.height * 0.2, // Ajusta esta altura según tus necesidades
-          
-                        child: GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 7, // Ajusta según el diseño de tu UI
-                            crossAxisSpacing: 10, // Espaciado horizontal
-                            mainAxisSpacing: 10, // Espaciado vertical
-                          ),
-                          itemCount: 21, // Asume que tienes 20 avatares
-                          itemBuilder: (context, index) {
-                            String avatarAsset =
-                                'assets/images/avatars/avatar${index + 1}.png';
-                            bool isSelected = _selectedAvatar == avatarAsset;
-                        
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedAvatar =
-                                      avatarAsset; // Actualiza el avatar seleccionado
-                                });
-                              },
-                              child: Container(
-                                decoration: isSelected
-                                    ? BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors
-                                              .orange, // Color del borde cuando está seleccionado
-                                          width: 3, // Ancho del borde
-                                        ),
-                                        shape: BoxShape
-                                            .circle, // Forma circular para el borde
-                                      )
-                                    : null,
-                                child: ClipOval(
-                                  child: Image.asset(
-                                    avatarAsset,
-                                    width: 80, // Ajusta el tamaño del avatar
-                                    height: 80, // Ajusta el tamaño del avatar
-                                    fit: BoxFit
-                                        .cover, // Esto asegura que la imagen llene el ClipOval
+                        decoration: 
+                       BoxDecoration(
+                        color: Colors.grey.shade600,
+                        borderRadius: BorderRadius.circular(20), // Bordes redondeados
+                      ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 7, // Ajusta según el diseño de tu UI
+                              crossAxisSpacing: 5, // Espaciado horizontal
+                              mainAxisSpacing: 12, // Espaciado vertical
+                            ),
+                            itemCount: 21, // Asume que tienes 20 avatares
+                            itemBuilder: (context, index) {
+                              String avatarAsset =
+                                  'assets/images/avatars/avatar${index + 1}.png';
+                              bool isSelected = _selectedAvatar == avatarAsset;
+                          
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _selectedAvatar =
+                                        avatarAsset; // Actualiza el avatar seleccionado
+                                  });
+                                },
+                                child: Container(
+                                  decoration: isSelected
+                                      ? BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors
+                                                .orange, // Color del borde cuando está seleccionado
+                                            width: 3, // Ancho del borde
+                                          ),
+                                          shape: BoxShape
+                                              .circle, // Forma circular para el borde
+                                        )
+                                      : null,
+                                  child: ClipOval(
+                                    child: Image.asset(
+                                      avatarAsset,
+                                      width: 90, // Ajusta el tamaño del avatar
+                                      height: 90, // Ajusta el tamaño del avatar
+                                      fit: BoxFit
+                                          .cover, // Esto asegura que la imagen llene el ClipOval
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
                   
-                  
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      margin: EdgeInsets.symmetric(
-                          vertical:
-                              8.0), // Agrega márgenes verticales si es necesario
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 30.0,
-                          vertical:
-                              15.0), // Aumenta el padding para un container más grande
-                      decoration: BoxDecoration(
-                        color: Colors.black
-                            .withOpacity(0.60), // Fondo negro para el container
-                        borderRadius: BorderRadius.circular(
-                            30), // Bordes redondeados para el container
-                      ),
-                      child: TextField(
-                        controller: _nameController,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(
-                              20), // Limita la longitud del input a 20 caracteres
-                          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-                        ],
-                        style: const TextStyle(
-                            color: Colors.white), // Texto blanco para el input
-                        cursorColor: Colors.white, // Color del cursor a blanco
-                        decoration: InputDecoration(
-                          hintText: 'Nombre del jugador',
-                          hintStyle: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
-                              fontFamily: 'Lexend',
-                              fontWeight:
-                                  FontWeight.w500), // Hint en blanco con opacidad
-                          border: InputBorder.none, // Sin borde
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical:
-                                  10),
-                          suffixIcon: IconButton(
-                            icon: Icon(Icons.add_circle_rounded, color: Colors.white),
-                            onPressed: players.length >= 20 ? null : _addPlayer,
-                          ), // Padding vertical para el texto dentro del input
-                        ),
-                      ),
-                    ),
-                  ),
+       Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: Container(
+    margin: EdgeInsets.symmetric(vertical: 8.0),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade300, // Fondo gris para el container
+      borderRadius: BorderRadius.circular(20), // Bordes redondeados para el container
+    ),
+    child: Theme(
+      data: Theme.of(context).copyWith(
+        colorScheme: Theme.of(context).colorScheme.copyWith(
+              primary: Colors.green, // Color del borde cuando está enfocado
+            ),
+      ),
+      child: TextField(
+        controller: _nameController,
+        style: const TextStyle(color: Colors.black), // Texto negro para el input
+        cursorColor: Colors.green, // Color del cursor a verde
+        decoration: InputDecoration(
+          hintText: 'Nombre del jugador',
+          hintStyle: TextStyle(
+            color: Colors.black.withOpacity(0.5),
+            fontFamily: 'Lexend',
+            fontWeight: FontWeight.w500,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.transparent, width: 0), // Sin borde visible cuando no está enfocado
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.transparent, width: 0), // Sin borde visible cuando no está enfocado
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.green, width: 2.0), // Borde verde cuando está enfocado
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Alinea el texto internamente
+          suffixIcon: IconButton(
+            icon: Icon(Icons.add_circle_rounded, color: Colors.black),
+            onPressed: players.length >= 20 ? null : _addPlayer,
+          ),
+        ),
+      ),
+    ),
+  ),
+),
+
+
                   SizedBox(height: screenSize.height * 0.03),
           
                  
@@ -229,24 +235,39 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                         itemCount: players
                             .length, // Usar la longitud de la lista obtenida del provider
                         itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: AssetImage(players[index].avatar),
-                            ),
-                            title: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                players[index].name,
-                                style: TextStyle(color: Colors.white),
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade600,
+                                borderRadius: BorderRadius.circular(30),
                               ),
-                            ),
-                            // Icono para eliminar jugadores
-                            trailing: IconButton(
-                              icon: Icon(Icons.remove_circle, color: Color(0xffFF414D)),
-                              onPressed: () {
-                                // Llama a la función para eliminar este jugador específico
-                                _removePlayer(index);
-                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage: AssetImage(players[index].avatar),
+                                  ),
+                                  title: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      players[index].name,
+                                      style: TextStyle(color: Colors.grey.shade800,
+                                        fontFamily: 'Lexend',
+                                        fontWeight: FontWeight.w100,
+                                      ),
+                                    ),
+                                  ),
+                                  // Icono para eliminar jugadores
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.remove_circle, color: Color(0xffFF414D)),
+                                    onPressed: () {
+                                      // Llama a la función para eliminar este jugador específico
+                                      _removePlayer(index);
+                                    },
+                                  ),
+                                ),
+                              ),
                             ),
                           );
                         },
@@ -307,3 +328,121 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
   }
 }
 
+
+void _showPlayerAddedAlert(BuildContext context) {
+  showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.grey.shade300, // Fondo del AlertDialog
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+          side: BorderSide(color: Colors.green, width: 2), // Borde verde
+        ),
+        title: Icon(
+          Icons.check_circle_outline, // Ícono de verificación
+          color: Colors.green, // Color del ícono a verde
+          size: 68.0,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                'Jugador agregado',
+                style: TextStyle(
+                  fontFamily: 'Lexend',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'El jugador ha sido agregado correctamente.',
+              style: TextStyle(
+                fontFamily: 'Lexend',
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'OK',
+              style: TextStyle(
+                fontFamily: 'Lexend',
+                fontWeight: FontWeight.w600,
+                color: Colors.green,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showMaxPlayersAlert(BuildContext context) {
+  showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.grey.shade300, // Fondo del AlertDialog
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+          side: BorderSide(color: Colors.red, width: 2), // Borde rojo
+        ),
+        title: Icon(
+          Icons.error_outline, // Ícono de error
+          color: Colors.red, // Color del ícono a rojo
+          size: 68.0,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                'Límite alcanzado',
+                style: TextStyle(
+                  fontFamily: 'Lexend',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'No se pueden agregar más de 10 jugadores.',
+              style: TextStyle(
+                fontFamily: 'Lexend',
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'OK',
+              style: TextStyle(
+                fontFamily: 'Lexend',
+                fontWeight: FontWeight.w600,
+                color: Colors.red,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}

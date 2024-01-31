@@ -54,7 +54,7 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
               ? FittedBox(
                   fit: BoxFit
                       .cover, // Esto asegura que el video cubra el espacio disponible
-                  child: SizedBox(
+                child: SizedBox(
                     width: _controller!.value.size?.width ?? 0,
                     height: _controller!.value.size?.height ?? 0,
                     child: VideoPlayer(_controller!),

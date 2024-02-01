@@ -24,7 +24,7 @@ final appRouter = GoRouter(
             return FadeTransition(opacity: animation, child: child);
           },
         );
-      },
+      },  
     ),
     GoRoute(
       path: '/playerselection',
@@ -102,6 +102,7 @@ final appRouter = GoRouter(
           cartaFinal: cartaFinal!,
           jugadoresCoincidentes: jugadoresCoincidentes,
         );
+
       },
     ),
 

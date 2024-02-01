@@ -18,12 +18,12 @@ class JuegoPiramideScreen extends ConsumerWidget {
     final jugadorDebeTomar = ref.watch(jugadorDebeTomarProvider);
     final int numeroDePisos = ref.watch(barajaProvider).piramide.length;
 
-    final double cardWidth = numeroDePisos > 7 ? 40 : 50;
-    final double cardHeight = numeroDePisos > 7 ? 50 : 70;
-    final double cardScale = numeroDePisos > 7 ? 1 : 1;
+    final double cardWidth = numeroDePisos > 7 ? 40 : 55;
+    final double cardHeight = numeroDePisos > 7 ? 55 : 70;
+    final double cardScale = numeroDePisos > 7 ? 0.95 : 1;
 
-    final double widthCartaAbajo = numeroDePisos > 7 ? 30 : 35;
-    final double heightCartaAbajo = numeroDePisos > 7 ? 50 : 55;
+    final double widthCartaAbajo = numeroDePisos > 7 ? 25 : 35;
+    final double heightCartaAbajo = numeroDePisos > 7 ? 40 : 55;
 
     Future<bool> _onWillPop() async {
       bool shouldPop = (await showDialog<bool>(
@@ -130,7 +130,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
                     ],
                   ),
                Padding(
-                padding: const EdgeInsets.all(50.0),
+                padding: const EdgeInsets.all(25),
                 child: ElevatedButton.icon(
                   icon: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -151,7 +151,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
                   style: ElevatedButton.styleFrom(
                     primary: Colors.grey[200],
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                 ),
@@ -280,7 +280,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
         width: widthCartaAbajo,
         height: heightCartaAbajo,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(5),
           image: DecorationImage(
             image: AssetImage('assets/images/cartas/carta.png'),
           ),
@@ -334,7 +334,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
     Suit suit = _convertMySuitToPlayingCardSuit(carta.palo);
     CardValue value = _convertMyValueToPlayingCardValue(carta.valor);
 
-    double scale = 1; // Ajusta este valor según sea necesario
+    double scale = 0.9; // Ajusta este valor según sea necesario
 
     return Container(
       width: 50, // Ancho del contenedor

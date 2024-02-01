@@ -8,23 +8,50 @@ import 'package:piramjuego/infrastructure/models/carta_model.dart' as my;
 import 'package:piramjuego/presentation/providers/baraja_provider.dart';
 import 'package:piramjuego/presentation/providers/barajascantidad_provider.dart';
 import 'package:piramjuego/presentation/providers/cartasporjugador_provider.dart';
-import 'package:piramjuego/presentation/providers/confetti_provider.dart';
 import 'package:piramjuego/presentation/providers/numerodepisos_provider.dart';
 import 'package:piramjuego/presentation/providers/player_provider.dart';
 import 'package:piramjuego/presentation/providers/sorbos_provider.dart';
 import 'package:playing_cards/playing_cards.dart';
 
-class ResultadoFinalScreen extends ConsumerWidget {
+class ResultadoFinalScreen extends ConsumerStatefulWidget {
+
   final my.Carta cartaFinal;
   final List<Player> jugadoresCoincidentes;
 
-  ResultadoFinalScreen(
-      {required this.cartaFinal, required this.jugadoresCoincidentes});
+  // Asegúrate de incluir un constructor que pase estas variables
+  ResultadoFinalScreen({required this.cartaFinal, required this.jugadoresCoincidentes});
+
+
 
   @override
-  Widget build(BuildContext context, ref) {
+  _ResultadoFinalScreenState createState() => _ResultadoFinalScreenState();
+}
 
-    
+class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
+  late ConfettiController _confettiController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa el controlador de confeti aquí
+    _confettiController = ConfettiController(duration: const Duration(seconds: 10));
+    // Play the confetti animation when the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(mounted) {
+        _confettiController.play();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // Asegúrate de desechar el controlador de confeti aquí
+    _confettiController.dispose();
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
+ 
 
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -32,6 +59,8 @@ class ResultadoFinalScreen extends ConsumerWidget {
     final paddingTopBoton = screenHeight * 0.08;
     final paddingRight = screenWidth * 0.05;
 
+
+   
     final jugadores = ref.watch(playerProvider);
     final sorbosX2 = ref
         .watch(sorbosX2Provider.state)
@@ -40,32 +69,30 @@ class ResultadoFinalScreen extends ConsumerWidget {
     final numeroDeBarajas = ref.read(numeroBarajasProvider.state).state;
     final numerodePisos = ref.read(pisoProvider.state).state;
 
+
     void reiniciarYComenzarNuevoJuego() {
       ref.read(barajaProvider.notifier).resetearJuego();
       ref.read(barajaProvider.notifier).generarYAsignarCartas(jugadores,
           cartasPorJugador, sorbosX2, numeroDeBarajas, numerodePisos);
     }
-     final confettiController = ref.watch(confettiControllerProvider);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      confettiController.play();
-    });
-
+    
 
     return Scaffold(
       backgroundColor: Colors.black26,
       body: Stack(
         children: [
-           // Añade esto para mostrar el confeti
           Align(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
             child: ConfettiWidget(
-              confettiController: confettiController,
-              blastDirectionality: BlastDirectionality.explosive, // Otra opción es directional
-              emissionFrequency: 0.6, // Con qué frecuencia se dispara el confeti
-              numberOfParticles: 50, // Cantidad de confeti
-              gravity: 0.3, // Ajusta la gravedad para que caiga más rápido o más lento
-            )
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive, // Se expande en todas direcciones
+              emissionFrequency: 0.05,
+              numberOfParticles: 20,
+              maxBlastForce: 100,
+              minBlastForce: 80,
+              gravity: 0.3,
+              colors: const [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple], // Colores del confeti
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(top: paddingTop),
@@ -85,7 +112,7 @@ class ResultadoFinalScreen extends ConsumerWidget {
                             fontWeight: FontWeight.w900),
                       ),
                     ),
-                    _buildPlayingCard(cartaFinal, context, isLarge: true),
+                    _buildPlayingCard(widget.cartaFinal, context, isLarge: true),
                     SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -98,12 +125,12 @@ class ResultadoFinalScreen extends ConsumerWidget {
                             fontWeight: FontWeight.w700),
                       ),
                     ),
-                    if (jugadoresCoincidentes.isNotEmpty)
-                      ...jugadoresCoincidentes
+                    if (widget.jugadoresCoincidentes.isNotEmpty)
+                      ...widget.jugadoresCoincidentes
                           .map((jugador) =>
                               _buildJugadorContainer(jugador, context))
                           .toList(),
-                    if (jugadoresCoincidentes.isEmpty)
+                    if (widget.jugadoresCoincidentes.isEmpty)
                       Text('No se encontró coincidencia',
                           style: TextStyle(fontSize: 24, color: Colors.white)),
                   ],

@@ -14,19 +14,31 @@ import 'package:piramjuego/presentation/screens/introductions_screen.dart';
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
-    GoRoute(
+       GoRoute(
       path: '/',
-        builder: (BuildContext context, GoRouterState state) => InicialHomeScreen(),
-        
-
-
+      pageBuilder: (context, state) {
+        return CustomTransitionPage<void>(
+          key: state.pageKey,
+          child: InicialHomeScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        );
+      },
     ),
     GoRoute(
       path: '/playerselection',
-        builder: (BuildContext context, GoRouterState state) => PlayerSelectionScreen(),
-        
-
-
+      pageBuilder: (context, state) {
+        return CustomTransitionPage<void>(
+          key: state.pageKey,
+          child: PlayerSelectionScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = Tween(begin: Offset(0.0, 1.0), end: Offset.zero).chain(CurveTween(curve: Curves.easeInOut));
+            return SlideTransition(position: animation.drive(tween), child: child);
+          },
+        );
+      },
+    
     ),
      GoRoute(
       path: '/parametros',
@@ -50,10 +62,29 @@ final appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state) => CartasAsignadasScreen(),
     ),
 
-    GoRoute(
-      path: '/juego',
-      builder: (BuildContext context, GoRouterState state) => JuegoPiramideScreen(),
-    ),
+  GoRoute(
+  path: '/juego',
+  pageBuilder: (context, state) {
+    return CustomTransitionPage<void>(
+      key: state.pageKey,
+      child: JuegoPiramideScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        // Usar una curva de animación para ajustar la percepción de la velocidad
+        var curve = Curves.fastOutSlowIn;
+
+        var curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: curve,
+        );
+
+        return ScaleTransition(
+          scale: Tween(begin: 0.0, end: 1.0).animate(curvedAnimation),
+          child: child,
+        );
+      },
+    );
+  },
+),
     GoRoute(
       path: '/cartafinal',
       builder: (BuildContext context, GoRouterState state) => FinalScreen(),

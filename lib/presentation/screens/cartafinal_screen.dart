@@ -10,9 +10,6 @@ class FinalScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Obtiene la carta final actual y la lista de jugadores
-    final barajaNotifier = ref.watch(barajaProvider.notifier);
-    final jugadores = ref.watch(playerProvider);
-    final cartaFinal = barajaNotifier.cartaFinal;
 
     return Scaffold(
       backgroundColor: Colors.black, // Fondo de pantalla beige

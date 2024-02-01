@@ -14,13 +14,14 @@ class PlayerSelectionScreen extends ConsumerStatefulWidget {
 }
 
 class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
-  int _selectedLives = 3; // Un valor por defecto para las vidas
   final TextEditingController _nameController = TextEditingController();
   String _selectedAvatar =
       'assets/images/avatars/avatar1.png'; // Ruta al avatar por defecto
 
     bool _showAddedMessage = false; // Atributo para controlar la visualización del mensaje
     String _addedPlayerName = ''; // Nombre del jugador agregado
+    bool _isButtonPressed = false;
+
 
 
   @override
@@ -29,49 +30,45 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
     final gameMode = ref.watch(gameModeProvider.state).state;
 
     void _addPlayer() {
-      final String name = _nameController.text.trim();
+  final String name = _nameController.text.trim();
 
-      // Verifica si el nombre ya está en uso
-      bool nameExists = players
-          .any((player) => player.name.toLowerCase() == name.toLowerCase());
+  // Verifica si el nombre ya está en uso
+  bool nameExists = players.any((player) => player.name.toLowerCase() == name.toLowerCase());
 
-      if (nameExists) {
-        _showNameExistsAlert(context);
-        return;
-      }
+  if (nameExists) {
+    _showNameExistsAlert(context);
+    return;
+  }
 
-      int maxPlayers = gameMode == GameMode.custom ? 30 : 10;
-      if (players.length >= maxPlayers) {
-        _showMaxPlayersAlert(context, gameMode);
-        return;
-      }
+  int maxPlayers = gameMode == GameMode.custom ? 30 : 10;
+  if (players.length >= maxPlayers) {
+    _showMaxPlayersAlert(context, gameMode);
+    return;
+  }
 
-      if (name.isNotEmpty && _selectedAvatar.isNotEmpty) {
-        ref.read(playerProvider.notifier).addPlayer(
-              Player(name: name, avatar: _selectedAvatar),
-            );
-        _nameController.clear();
-        _selectedAvatar = 'assets/images/avatars/avatar1.png';
+  if (name.isNotEmpty && _selectedAvatar.isNotEmpty) {
+    ref.read(playerProvider.notifier).addPlayer(
+      Player(name: name, avatar: _selectedAvatar),
+    );
+    _nameController.clear();
+    _selectedAvatar = 'assets/images/avatars/avatar1.png';
+
+    // Oculta el mensaje después de unos segundos
+    Future.delayed(Duration(seconds: 3), () {
+      if (mounted) { // Verifica si el State está montado antes de llamar a setState
         setState(() {
-          _showAddedMessage = true;
-          _addedPlayerName = name;
-        });
-
-        // Oculta el mensaje después de unos segundos
-        Future.delayed(Duration(seconds: 3), () {
-          setState(() {
-            _showAddedMessage = false;
-          });
+          _showAddedMessage = false;
         });
       }
-    }
+    });
 
-    // Cuando el usuario selecciona un número de vidas, actualizamos el estado local y el provider
-    void _handleLifeSelection(int numLives) {
-      setState(() {
-        _selectedLives = numLives;
-      });
-    }
+    // Inmediatamente después de agregar el jugador y aún dentro de la condición de éxito, muestra el mensaje
+    setState(() {
+      _showAddedMessage = true;
+      _addedPlayerName = name;
+    });
+  }
+}
 
     void _removePlayer(int index) {
       ref.read(playerProvider.notifier).removePlayer(index);
@@ -122,52 +119,41 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                       height: screenSize.height *
                           0.2, // Ajusta esta altura según tus necesidades
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade600,
+                        color: Colors.grey.shade300,
                         borderRadius:
                             BorderRadius.circular(20), // Bordes redondeados
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                7, // Ajusta según el diseño de tu UI
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 7, // Ajusta según el diseño de tu UI
                             crossAxisSpacing: 5, // Espaciado horizontal
                             mainAxisSpacing: 12, // Espaciado vertical
                           ),
                           itemCount: 21, // Asume que tienes 20 avatares
                           itemBuilder: (context, index) {
-                            String avatarAsset =
-                                'assets/images/avatars/avatar${index + 1}.png';
+                            String avatarAsset = 'assets/images/avatars/avatar${index + 1}.png';
                             bool isSelected = _selectedAvatar == avatarAsset;
 
                             return GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  _selectedAvatar =
-                                      avatarAsset; // Actualiza el avatar seleccionado
+                                  _selectedAvatar = avatarAsset; // Actualiza el avatar seleccionado
                                 });
                               },
-                              child: Container(
-                                decoration: isSelected
-                                    ? BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors
-                                              .orange, // Color del borde cuando está seleccionado
-                                          width: 3, // Ancho del borde
-                                        ),
-                                        shape: BoxShape
-                                            .circle, // Forma circular para el borde
-                                      )
-                                    : null,
+                              child: AnimatedContainer(
+                                duration: Duration(milliseconds: 300),
+                                width: isSelected ? 100 : 80, // Ajusta estos tamaños según necesites
+                                height: isSelected ? 100 : 80, // Ajusta estos tamaños según necesites
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: isSelected ? Border.all(color: Colors.green, width: 3) : null,
+                                ),
                                 child: ClipOval(
                                   child: Image.asset(
                                     avatarAsset,
-                                    width: 90, // Ajusta el tamaño del avatar
-                                    height: 90, // Ajusta el tamaño del avatar
-                                    fit: BoxFit
-                                        .cover, // Esto asegura que la imagen llene el ClipOval
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
@@ -177,71 +163,64 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 8.0),
-                      decoration: BoxDecoration(
-                        color: Colors
-                            .grey.shade300, // Fondo gris para el container
-                        borderRadius: BorderRadius.circular(
-                            20), // Bordes redondeados para el container
-                      ),
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          colorScheme: Theme.of(context).colorScheme.copyWith(
-                                primary: Colors
-                                    .green, // Color del borde cuando está enfocado
-                              ),
-                        ),
-                        child: TextField(
-                          controller: _nameController,
-                          style: const TextStyle(
-                              color: Colors.black), // Texto negro para el input
-                          cursorColor: Colors.green, // Color del cursor a verde
-                          decoration: InputDecoration(
-                            hintText: 'Nombre del jugador',
-                            hintStyle: TextStyle(
-                              color: Colors.black.withOpacity(0.5),
-                              fontFamily: 'Lexend',
-                              fontWeight: FontWeight.w500,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width:
-                                      0), // Sin borde visible cuando no está enfocado
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                  color: Colors.transparent,
-                                  width:
-                                      0), // Sin borde visible cuando no está enfocado
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                  color: Colors.green,
-                                  width:
-                                      2.0), // Borde verde cuando está enfocado
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 10), // Alinea el texto internamente
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.add_circle_rounded,
-                                  color: Colors.black),
-                              onPressed:
-                                  players.length >= 20 ? null : _addPlayer,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+         Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 8.0),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300, // Fondo gris para el container
+              borderRadius: BorderRadius.circular(20), // Bordes redondeados para el container
+            ),
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: Theme.of(context).colorScheme.copyWith(
+                  primary: Colors.green, // Color del borde cuando está enfocado
+                ),
+              ),
+              child: TextField(
+                 inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                ],
+                
+                controller: _nameController,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Lexend',
+                  fontWeight: FontWeight.w700,
+                ), // Aplica el mismo estilo que el hintStyle
+                cursorColor: Colors.green, // Color del cursor a verde
+                decoration: InputDecoration(
+                  hintText: 'Nombre del jugador',
+                  hintStyle: TextStyle(
+                    color: Colors.black.withOpacity(0.5),
+                    fontFamily: 'Lexend',
+                    fontWeight: FontWeight.w700,
                   ),
-                  
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: Colors.transparent, width: 0), // Sin borde visible cuando no está enfocado
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: Colors.transparent, width: 0), // Sin borde visible cuando no está enfocado
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: Colors.green, width: 2.0), // Borde verde cuando está enfocado
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 30, // Aumenta el padding horizontal
+                    vertical: 15, // Aumenta el padding vertical
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.add_circle_rounded, color: Colors.black),
+                    onPressed: players.length >= 20 ? null : _addPlayer,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
                   _showAddedMessage 
                     ? 
                           Container(
@@ -309,7 +288,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.grey.shade600,
+                              color: Colors.grey.shade300,
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Padding(
@@ -326,7 +305,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                                     style: TextStyle(
                                       color: Colors.grey.shade800,
                                       fontFamily: 'Lexend',
-                                      fontWeight: FontWeight.w100,
+                                      fontWeight: FontWeight.w800,
                                     ),
                                   ),
                                 ),

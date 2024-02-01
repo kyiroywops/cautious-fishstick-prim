@@ -159,15 +159,28 @@ class CartasAsignadasScreen extends ConsumerWidget {
                     ),
                   ),
                   // Botón Jugar
-                  ElevatedButton.icon(
-                    onPressed: () => GoRouter.of(context).go('/juego'),
-                    icon: Icon(Icons.play_arrow, color: Colors.white),
-                    label: Text('Jugar', style: TextStyle(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                    ),
+                 ElevatedButton.icon(
+                  onPressed: () {
+                    // Obtiene la lista de jugadores del provider
+                    final jugadores = ref.read(playerProvider);
+                    // Verifica si todos los jugadores tienen cartas asignadas
+                    bool cartasAsignadas = jugadores.every((jugador) => jugador.cartas.isNotEmpty);
+
+                    if (!cartasAsignadas) {
+                      // Si no todas las cartas están asignadas, muestra la alerta.
+                      _showNoCardsAssignedAlert(context);
+                    } else {
+                      // Si todas las cartas están asignadas, procede al juego.
+                      GoRouter.of(context).go('/juego');
+                    }
+                  },
+                  icon: Icon(Icons.play_arrow, color: Colors.white),
+                  label: Text('Jugar', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                   ),
+                ),
                 ],
               ),
             ),
@@ -243,3 +256,44 @@ CardValue _convertMyValueToPlayingCardValue(my.CardValue myValue) {
 }
 
 
+void _showNoCardsAssignedAlert(BuildContext context) {
+  showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.grey.shade300, // Fondo del AlertDialog
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0), // Bordes redondeados
+          side: BorderSide(color: Colors.red, width: 5), // Borde rojo
+        ),
+        titlePadding: EdgeInsets.only(top: 20), // Padding en la parte superior del título
+        title: Icon(
+          Icons.warning_amber_rounded, // Ícono de advertencia
+          color: Colors.red, // Color rojo para el ícono
+          size: 68.0, // Tamaño del ícono
+        ),
+        content: Text(
+          'No se han asignado cartas a todos los jugadores.',
+          style: TextStyle(
+            fontFamily: 'Lexend',
+            fontWeight: FontWeight.w400,
+            color: Colors.black,
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(), // Cierra el diálogo
+            child: Text(
+              'OK',
+              style: TextStyle(
+                fontFamily: 'Lexend',
+                fontWeight: FontWeight.w600,
+                color: Colors.red, // Color rojo para el texto del botón
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}

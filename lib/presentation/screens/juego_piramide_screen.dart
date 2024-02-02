@@ -47,7 +47,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
           children: [
             Center(child: Text('¿Deseas salir?', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w800, fontSize: 20))),
             SizedBox(height: 8),
-            Text('Si presionas "Salir", irás a la pantalla inicial y se reiniciará la partida.', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w400)),
+            Text('Si presionas "Salir", irás a la pantalla asignar cartas y se reiniciará la partida.', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w400)),
           ],
         ),
         actions: [
@@ -220,17 +220,32 @@ class JuegoPiramideScreen extends ConsumerWidget {
                 ),
 
                 // Muestra la regla para el nivel actual si es válido
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    barajaNotifier.reglaActual,
-                    style: TextStyle(
-                        fontFamily: 'Lexend',
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600),
-                  ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center, // Centra los elementos en la fila
+
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        barajaNotifier.reglaActual,
+                        style: TextStyle(
+                            fontFamily: 'Lexend',
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+             Padding(
+              padding: const EdgeInsets.only(right: 20.0), // Ajusta el espacio alrededor de la imagen
+              child: SizedBox(
+                width: 40, // Ajusta el ancho de la imagen
+                height: 40, // Ajusta la altura de la imagen
+                child: Image.asset('assets/images/vasitojuego.png', fit: BoxFit.cover), // Usa BoxFit.cover para mantener la relación de aspecto
+              ),
+            ),
+                  ],
                 ),
+
 
                 // Aquí agregas el Consumer para escuchar los cambios y mostrar el mensaje
 

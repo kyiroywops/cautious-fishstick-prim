@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:piramjuego/presentation/providers/gamemode_provider.dart';
+import 'package:piramjuego/presentation/widgets/boton_discord.dart';
 import 'package:video_player/video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -75,11 +76,11 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                         child: Center(
                           child: Image.asset(
                             'assets/images/logo.png',
-                            width: screenSize.width * 0.5,
+                            width: screenSize.width * 0.4,
                             height: screenSize.height * 0.3,
                             fit: BoxFit.contain,
                           ),
-                        ),
+                        )
                       ),
                       _buildButton(context, 'Partida rápida', GameMode.quick,
                           screenSize),
@@ -93,12 +94,19 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                         children: <Widget>[
                         IconButton(
                           icon: Icon(FontAwesomeIcons.instagram, color: Colors.white),
-                          onPressed: () => _launchURL('https://www.instagram.com/piramide'),
+                          onPressed: () => _launchURL('https://www.instagram.com/piramideapp'),
                         ),
                           SizedBox(width: 20), // Espacio entre los íconos
                           IconButton(
-                            icon: Icon(FontAwesomeIcons.discord, color: Colors.white,), // Usando el ícono personalizado de Discord como en la otra pantalla
-                            onPressed: () => _launchURL('https://discord.com/invite/piramide'),
+                            icon: Icon(Icons.discord, color: Colors.white,),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DiscordDialog(discordUrl: 'https://discord.gg/EHqWWN59'); // Coloca aquí tu URL de Discord
+                                },
+                              );
+                            },
                           ),
                         ],
                       ),

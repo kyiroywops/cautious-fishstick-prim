@@ -11,8 +11,8 @@ import 'package:piramjuego/presentation/providers/numerodepisos_provider.dart';
 import 'package:piramjuego/presentation/providers/player_provider.dart'; // Importa tu playerProvider
 import 'package:piramjuego/presentation/providers/sorbos_provider.dart';
 import 'package:piramjuego/presentation/widgets/boton_atras.dart';
+import 'package:piramjuego/presentation/widgets/boton_discord.dart';
 import 'package:playing_cards/playing_cards.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 
 class CartasAsignadasScreen extends ConsumerWidget {
@@ -24,20 +24,8 @@ class CartasAsignadasScreen extends ConsumerWidget {
     final numeroDeBarajas = ref.read(numeroBarajasProvider.state).state;
     final numerodePisos = ref.read(pisoProvider.state).state;
 
-    final String discordUrl = 'https://discord.gg/tuComunidad';
 
-  // Método para abrir el enlace de Discord
-    void _launchDiscord(BuildContext context) async {
-    if (await canLaunch(discordUrl)) {
-      await launch(discordUrl);
-    } else {
-      // Mostrar error o manejar la situación
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No se pudo abrir el enlace de Discord')),
-      );
-    }
-  }
-
+  
 
 
 
@@ -73,8 +61,15 @@ class CartasAsignadasScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
             child: IconButton(
-              icon: Icon(Icons.discord, color: Colors.white),
-              onPressed: () => _launchDiscord(context),
+              icon: Icon(Icons.discord, color: Colors.white,),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DiscordDialog(discordUrl: 'https://discord.gg/EHqWWN59'); // Coloca aquí tu URL de Discord
+                  },
+                );
+              },
             ),
           ),
         ],

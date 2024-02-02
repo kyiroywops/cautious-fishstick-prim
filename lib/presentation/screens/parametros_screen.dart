@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,23 +8,11 @@ import 'package:piramjuego/presentation/providers/gamemode_provider.dart';
 import 'package:piramjuego/presentation/providers/numerodepisos_provider.dart';
 import 'package:piramjuego/presentation/providers/sorbos_provider.dart';
 import 'package:piramjuego/presentation/widgets/boton_atras.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:piramjuego/presentation/widgets/boton_discord.dart';
 
 class GamesScreen extends ConsumerWidget {
   // URL de tu comunidad en Discord
-  final String discordUrl = 'https://discord.gg/tuComunidad';
-
-  // Método para abrir el enlace de Discord
-  void _launchDiscord(BuildContext context) async {
-    if (await canLaunch(discordUrl)) {
-      await launch(discordUrl);
-    } else {
-      // Mostrar error o manejar la situación
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No se pudo abrir el enlace de Discord')),
-      );
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,8 +52,15 @@ class GamesScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
             child: IconButton(
-              icon: Icon(Icons.discord, color: Colors.white),
-              onPressed: () => _launchDiscord(context),
+              icon: Icon(Icons.discord, color: Colors.white,),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DiscordDialog(discordUrl: 'https://discord.gg/EHqWWN59'); // Coloca aquí tu URL de Discord
+                  },
+                );
+              },
             ),
           ),
         ],

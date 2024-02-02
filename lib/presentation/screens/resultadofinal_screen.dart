@@ -19,7 +19,7 @@ class ResultadoFinalScreen extends ConsumerStatefulWidget {
   final List<Player> jugadoresCoincidentes;
 
   // Asegúrate de incluir un constructor que pase estas variables
-  ResultadoFinalScreen({required this.cartaFinal, required this.jugadoresCoincidentes});
+  ResultadoFinalScreen({Key? key, required this.cartaFinal, required this.jugadoresCoincidentes}) : super(key: key);
 
 
 
@@ -82,7 +82,7 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
       body: Stack(
         children: [
           Align(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
             child: ConfettiWidget(
               confettiController: _confettiController,
               blastDirectionality: BlastDirectionality.explosive, // Se expande en todas direcciones

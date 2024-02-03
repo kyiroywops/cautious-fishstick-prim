@@ -86,9 +86,40 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                           screenSize),
                       _buildButton(context, 'Partida personalizada',
                           GameMode.custom, screenSize),
-                      _buildButton(
-                          context, 'Cómo jugar', GameMode.custom, screenSize,
-                          isBlack: false, textColor: Colors.black),
+                      // Dentro de tu Column, reemplaza la llamada a _buildButton para "Cómo jugar" con esto:
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.2,
+                          vertical: screenSize.height * 0.02,
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            GoRouter.of(context).push('/instructions');
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Cómo jugar',
+                              style: TextStyle(
+                                color: Colors.black, // Color del texto
+                                fontFamily: 'Lexend',
+                                fontWeight: FontWeight.w800,
+                                fontSize: screenSize.width * 0.035,
+                              ),
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.90), // Color de fondo del botón
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30), // Bordes redondeados
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 10,
+                            ),
+                          ),
+                        ),
+                      ),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.center, // Centrar los íconos en el Row
                         children: <Widget>[

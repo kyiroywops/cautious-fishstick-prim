@@ -295,6 +295,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
                                 leading: CircleAvatar(
+                                  radius: 35,
                                   backgroundImage:
                                       AssetImage(players[index].avatar),
                                 ),

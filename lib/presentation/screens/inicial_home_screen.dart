@@ -110,6 +110,27 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 20), // Espacio entre los íconos y el texto
+                      Text(
+                        'Recuerda beber con moderación.',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Lexend',
+                          fontWeight: FontWeight.w300,
+                          fontSize: 11,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        '© Derechos reservados Tryagain.',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Lexend',
+                          fontWeight: FontWeight.w200,
+                          fontSize: 11,
+                        ),
+                        textAlign: TextAlign.center,
+                      )
                     ],
                   ),
                 );

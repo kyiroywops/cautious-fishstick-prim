@@ -48,13 +48,19 @@ final appRouter = GoRouter(
 
 
     ),
-     GoRoute(
-      path: '/instructions',
-        builder: (BuildContext context, GoRouterState state) => InstructionsScreen(),
-      
-        
-
-
+    GoRoute(
+      path: '/instrucions',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage<void>(
+          key: state.pageKey,
+          child: PlayerSelectionScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = Tween(begin: Offset(0.0, 1.0), end: Offset.zero).chain(CurveTween(curve: Curves.easeInOut));
+            return SlideTransition(position: animation.drive(tween), child: child);
+          },
+        );
+      },
+    
     ),
 
     GoRoute(

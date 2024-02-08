@@ -65,7 +65,7 @@ final appRouter = GoRouter(
 
     GoRoute(
       path: '/cartasasignadas',
-      builder: (BuildContext context, GoRouterState state) => CartasAsignadasScreen(),
+      builder: (BuildContext context, GoRouterState state) => const CartasAsignadasScreen(),
     ),
 
   GoRoute(

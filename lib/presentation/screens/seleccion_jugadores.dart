@@ -20,7 +20,6 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
 
     bool _showAddedMessage = false; // Atributo para controlar la visualización del mensaje
     String _addedPlayerName = ''; // Nombre del jugador agregado
-    bool _isButtonPressed = false;
 
 
 

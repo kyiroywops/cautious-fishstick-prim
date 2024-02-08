@@ -15,6 +15,8 @@ import 'package:piramjuego/presentation/widgets/boton_discord.dart';
 import 'package:playing_cards/playing_cards.dart';
 
 class CartasAsignadasScreen extends ConsumerWidget {
+  const CartasAsignadasScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final jugadores = ref.watch(playerProvider);

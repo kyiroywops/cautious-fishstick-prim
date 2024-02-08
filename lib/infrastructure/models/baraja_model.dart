@@ -17,7 +17,7 @@ class Baraja {
   
 }) : piramide = piramideInicial ?? List.generate(numerodePisos, (nivel) => List.filled(nivel + 1, null, growable: false)) {
   if (cartasPredefinidas != null) {
-    this.cartas = cartasPredefinidas;
+    cartas = cartasPredefinidas;
   } else {
     for (int i = 0; i < numeroDeBarajas; i++) {
       Suit.values.where((suit) => suit != Suit.none).forEach((palo) {

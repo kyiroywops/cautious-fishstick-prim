@@ -96,6 +96,16 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                           onPressed: () {
                             GoRouter.of(context).push('/instructions');
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.90), // Color de fondo del botón
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30), // Bordes redondeados
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 10,
+                            ),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
@@ -106,16 +116,6 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                                 fontWeight: FontWeight.w800,
                                 fontSize: screenSize.width * 0.035,
                               ),
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withOpacity(0.90), // Color de fondo del botón
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30), // Bordes redondeados
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 10,
                             ),
                           ),
                         ),
@@ -189,7 +189,7 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
       ),
       child: ElevatedButton(
         onPressed: () {
-          ref.read(gameModeProvider.state).state = mode;
+          ref.read(gameModeProvider.notifier).state = mode;
           GoRouter.of(context).push('/playerselection');
         },
         child: Padding(

@@ -14,8 +14,8 @@ class Carta {
   // Método copyWith para crear una nueva instancia con datos actualizados
   Carta copyWith({bool? estaBocaArriba}) {
     return Carta(
-      this.palo,
-      this.valor,
+      palo,
+      valor,
       estaBocaArriba: estaBocaArriba ?? this.estaBocaArriba,
     );
   }

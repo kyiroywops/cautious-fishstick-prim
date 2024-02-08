@@ -56,8 +56,8 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                   fit: BoxFit
                       .cover, // Esto asegura que el video cubra el espacio disponible
                 child: SizedBox(
-                    width: _controller!.value.size?.width ?? 0,
-                    height: _controller!.value.size?.height ?? 0,
+                    width: _controller!.value.size.width,
+                    height: _controller!.value.size.height,
                     child: VideoPlayer(_controller!),
                   ),
                 )
@@ -113,7 +113,7 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30), // Bordes redondeados
                             ),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 24,
                               vertical: 10,
                             ),
@@ -124,12 +124,12 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center, // Centrar los íconos en el Row
                         children: <Widget>[
                         IconButton(
-                          icon: Icon(FontAwesomeIcons.instagram, color: Colors.white),
+                          icon: const Icon(FontAwesomeIcons.instagram, color: Colors.white),
                           onPressed: () => _launchURL('https://www.instagram.com/piramideapp'),
                         ),
-                          SizedBox(width: 20), // Espacio entre los íconos
+                          const SizedBox(width: 20), // Espacio entre los íconos
                           IconButton(
-                            icon: Icon(Icons.discord, color: Colors.white,),
+                            icon: const Icon(Icons.discord, color: Colors.white,),
                             onPressed: () {
                               showDialog(
                                 context: context,
@@ -141,8 +141,8 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20), // Espacio entre los íconos y el texto
-                      Text(
+                      const SizedBox(height: 20), // Espacio entre los íconos y el texto
+                      const Text(
                         'Recuerda beber con moderación.',
                         style: TextStyle(
                           color: Colors.white,
@@ -152,7 +152,7 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      Text(
+                      const Text(
                         '© Derechos reservados Tryagain.',
                         style: TextStyle(
                           color: Colors.white,
@@ -211,7 +211,7 @@ class _InicialHomeScreenState extends ConsumerState<InicialHomeScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          padding: EdgeInsets.symmetric(
+          padding: const EdgeInsets.symmetric(
             horizontal: 24,
             vertical: 10,
           ),

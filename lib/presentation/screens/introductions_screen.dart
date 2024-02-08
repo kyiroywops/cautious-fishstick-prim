@@ -15,7 +15,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Colors.transparent,
@@ -24,7 +24,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/slide${_currentPage}.jpeg'),
+            image: AssetImage('assets/images/slide$_currentPage.jpeg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -41,7 +41,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
                 _buildPageContent(
                   icon: Icons.group_add,
                   title: 'Arma tu grupo',
-                  text: 'Invita a tus amigos a unirse y asignarles cartas aleatoriamente para comenzar la partida.',
+                  text: 'Agrega a tus amigos a unirse y asignarles cartas aleatoriamente para comenzar la partida.',
                 ),
                 _buildPageContent(
                   icon: Icons.card_giftcard,
@@ -106,7 +106,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
     );
   }
 
-  Widget _buildPageIndicator() {
+Widget _buildPageIndicator() {
     return Center(
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -119,7 +119,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
     return Container(
       height: 10,
       width: 10,
-      margin: EdgeInsets.symmetric(horizontal: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       decoration: BoxDecoration(
         color: _currentPage == index ? Colors.white : Colors.white54,
         shape: BoxShape.circle,
@@ -132,7 +132,7 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
       onPressed: () {
         if (_currentPage < 2) {
           _pageController.nextPage(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
           );
         } else {
@@ -140,17 +140,17 @@ class _InstructionsScreenState extends State<InstructionsScreen> {
         }
       },
       style: TextButton.styleFrom(
-        primary: Colors.white,
+        foregroundColor: Colors.white,
         backgroundColor: Colors.black.withOpacity(0.3),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: Text(
           _currentPage < 2 ? 'Siguiente' : 'Finalizar',
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Lexend',
             fontWeight: FontWeight.w800,
             fontSize: 12,

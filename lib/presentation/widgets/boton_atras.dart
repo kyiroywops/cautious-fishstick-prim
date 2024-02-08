@@ -5,7 +5,7 @@ class BotonAtras extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back, color: Colors.white),
+      icon: const Icon(Icons.arrow_back, color: Colors.white),
       onPressed: () => _showExitConfirmation(context),
     );
   }
@@ -16,17 +16,17 @@ class BotonAtras extends StatelessWidget {
       builder: (context) => AlertDialog(
         backgroundColor: Colors.grey.shade300, // Fondo del AlertDialog
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        titlePadding: EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 10.0),
-        contentPadding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-        title: Padding(
-          padding: const EdgeInsets.only(top: 10.0),
+        titlePadding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 10.0),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+        title: const Padding(
+          padding: EdgeInsets.only(top: 10.0),
           child: Icon(
             Icons.autorenew,
             color: Colors.black,
             size: 68.0,
           ),
         ),
-        content: Column(
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -38,18 +38,18 @@ class BotonAtras extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('No', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w800)),
+            child: const Text('No', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w800)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Salir', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w600)),
             style: ElevatedButton.styleFrom(
-              primary: Colors.black,
-              onPrimary: Colors.white,
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            child: const Text('Salir', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w600)),
           ),
         ],
       ),

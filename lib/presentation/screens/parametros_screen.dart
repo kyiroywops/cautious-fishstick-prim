@@ -16,15 +16,15 @@ class GamesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gameMode = ref.watch(gameModeProvider.state).state;
-    final cartasPorJugador = ref.watch(cartasPorJugadorProvider.state).state;
+    final gameMode = ref.watch(gameModeProvider.notifier).state;
+    final cartasPorJugador = ref.watch(cartasPorJugadorProvider);
 
     List<bool> isSelected = [2, 3, 4, 5].map((e) => e == cartasPorJugador).toList();
 
-    final numeroBarajas = ref.watch(numeroBarajasProvider.state).state;
+    final numeroBarajas = ref.watch(numeroBarajasProvider);
     List<bool> isSelectedBarajas = [1, 2, 3, 4].map((e) => e == numeroBarajas).toList();
 
-    final numerodePisos = ref.watch(pisoProvider.state).state;
+    final numerodePisos = ref.watch(pisoProvider);
     List<bool> isSelectedPisos = [6, 7, 8, 10].map((e) => e == numerodePisos).toList();
 
 
@@ -37,22 +37,22 @@ class GamesScreen extends ConsumerWidget {
         leading: BotonAtras(),
         actions: [
           Container(
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
                 right: 8), // Espacio entre el contenedor y el botón de Discord
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: Colors.brown.withOpacity(0.8),
               borderRadius: BorderRadius.circular(15),
             ),
             child: Text(
               gameMode == GameMode.custom ? 'Personalizada' : 'Rápida',
-              style: TextStyle(color:Colors.white,  fontFamily: 'Lexend')
+              style: const TextStyle(color:Colors.white,  fontFamily: 'Lexend')
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
             child: IconButton(
-              icon: Icon(Icons.discord, color: Colors.white,),
+              icon: const Icon(Icons.discord, color: Colors.white,),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -71,16 +71,16 @@ class GamesScreen extends ConsumerWidget {
           children: [
             _buildCustomSwitchListTile(
               title: 'Sorbos x2',
-              value: ref.watch(sorbosX2Provider.state).state,
+              value: ref.watch(sorbosX2Provider),
               onChanged: (newValue) {
-                ref.read(sorbosX2Provider.state).state = newValue;
+                ref.read(sorbosX2Provider.notifier).state = newValue;
               },
             ),
             _buildCustomSwitchListTile(
               title: 'Forzar Carta',
-              value: ref.watch(forzarCartaProvider.state).state,
+              value: ref.watch(forzarCartaProvider),
               onChanged: (newValue) {
-                ref.read(forzarCartaProvider.state).state = newValue;
+                ref.read(forzarCartaProvider.notifier).state = newValue;
               },
             ),
       
@@ -88,8 +88,8 @@ class GamesScreen extends ConsumerWidget {
 
         
       
-          Padding(
-            padding: const EdgeInsets.all(15.0),
+          const Padding(
+            padding: EdgeInsets.all(15.0),
             child: Text(
               'Cantidad de cartas por jugador',
               style: TextStyle(
@@ -120,7 +120,7 @@ class GamesScreen extends ConsumerWidget {
           ],
           onPressed: (int index) {
             // Ajusta el valor directamente al valor del botón
-            ref.read(cartasPorJugadorProvider.state).state = index + 2;
+            ref.read(cartasPorJugadorProvider.notifier).state = index + 2;
             for (int i = 0; i < isSelected.length; i++) {
               isSelected[i] = i == index;
             }
@@ -133,8 +133,8 @@ class GamesScreen extends ConsumerWidget {
     ),
          
     
-            Padding(
-              padding: const EdgeInsets.all(15.0),
+            const Padding(
+              padding: EdgeInsets.all(15.0),
               child: Text(
                 'Cantidad de barajas',
                 style: TextStyle(
@@ -164,7 +164,7 @@ class GamesScreen extends ConsumerWidget {
             _buildToggleButton('4', isSelectedBarajas[3]),
           ],
           onPressed: (int index) {
-            ref.read(numeroBarajasProvider.state).state = index + 1;
+            ref.read(numeroBarajasProvider.notifier).state = index + 1;
             for (int i = 0; i < isSelectedBarajas.length; i++) {
               isSelectedBarajas[i] = i == index;
             }
@@ -175,8 +175,8 @@ class GamesScreen extends ConsumerWidget {
       ),
     ), 
            
-            Padding(
-              padding: const EdgeInsets.all(15.0),
+            const Padding(
+              padding: EdgeInsets.all(15.0),
               child: Text(
                 'Cantidad de pisos piramide',
                 style: TextStyle(
@@ -222,21 +222,21 @@ class GamesScreen extends ConsumerWidget {
           decoration: BoxDecoration(
             color: Colors.grey.shade300, // Color de fondo del contenedor
             borderRadius: BorderRadius.circular(15.0),
-            border: Border(
+            border: const Border(
               left: BorderSide(
                 color: Colors.orange, // Color del borde izquierdo
                 width: 5.0, // Ancho del borde izquierdo
               ),
             ),
           ),
-          child: Row(
+          child: const Row(
             children: <Widget>[
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                      padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
                       child: Text(
                         '¡Peligro!',
                         style: TextStyle(
@@ -248,7 +248,7 @@ class GamesScreen extends ConsumerWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text(
                         'Ten cuidado al aumentar el número de cartas, asegúrate de tener suficientes barajas para que el juego funcione correctamente.',
                         style: TextStyle(
@@ -280,7 +280,7 @@ class GamesScreen extends ConsumerWidget {
           // Navegar a la pantalla de reglas
           GoRouter.of(context).go('/cartasasignadas');
         },
-        label: Text(
+        label: const Text(
           'Siguiente',
           style: TextStyle(
             color: Colors.black, // Texto negro
@@ -288,7 +288,7 @@ class GamesScreen extends ConsumerWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        icon: Icon(
+        icon: const Icon(
           Icons.arrow_forward,
           color: Colors.black, // Ícono negro
         ),
@@ -311,8 +311,8 @@ class GamesScreen extends ConsumerWidget {
       child: ElevatedButton(
         onPressed: () => numeroBarajas.state = numero,
         style: ElevatedButton.styleFrom(
-          primary: numeroBarajas.state == numero ? Colors.black : Colors.white,
-          onPrimary: Colors.white,
+          backgroundColor: numeroBarajas.state == numero ? Colors.black : Colors.white,
+          foregroundColor: Colors.white,
           textStyle: TextStyle(
             color: numeroBarajas.state == numero ? Colors.white : Colors.black,
           ),
@@ -339,14 +339,14 @@ Widget _buildPisosButton(int i, WidgetRef ref) {
     child: ElevatedButton(
       onPressed: () => numerodePisos.state = i,
       style: ElevatedButton.styleFrom(
-        primary: numerodePisos.state == i ? Colors.black : Colors.white,
-        onPrimary: Colors.white, // Color del texto cuando el botón está seleccionado
+        backgroundColor: numerodePisos.state == i ? Colors.black : Colors.white,
+        foregroundColor: Colors.white, // Color del texto cuando el botón está seleccionado
         textStyle: TextStyle(
           color: numerodePisos.state == i ? Colors.white : Colors.black, // Color del texto
           fontFamily: 'Lexend',
           fontWeight: FontWeight.w600,
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
       ),
       child: Text(
         '$i Pisos',
@@ -366,7 +366,7 @@ Widget _buildPisosButton(int i, WidgetRef ref) {
     return SwitchListTile(
       title: Text(
         title,
-        style: TextStyle(color: Colors.white, fontFamily: 'Lexend', fontWeight: FontWeight.w700),
+        style: const TextStyle(color: Colors.white, fontFamily: 'Lexend', fontWeight: FontWeight.w700),
       ),
       value: value,
       onChanged: onChanged,

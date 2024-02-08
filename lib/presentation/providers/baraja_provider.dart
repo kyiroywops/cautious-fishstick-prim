@@ -45,7 +45,6 @@ class BarajaNotifier extends StateNotifier<Baraja> {
 
     // Notifica a los oyentes del cambio de estado para que la UI se actualice
     reconstruir.value = !reconstruir.value;
-    print("Juego reseteado");
   }
 
 
@@ -55,7 +54,6 @@ class BarajaNotifier extends StateNotifier<Baraja> {
       piramide[nivel][posicion] = nuevaCarta;
       cartasBocaAbajo[nivel][posicion] =
           true; // La nueva carta estará boca abajo inicialmente
-      print("Reemplazando carta en la pirámide: $nuevaCarta");
 
       // Notificar a los observadores del cambio en el estado.
       state = Baraja(
@@ -93,20 +91,16 @@ void asignarCartaFinal(List<Player> jugadores) {
 
   do {
     if (state.cartas.isEmpty) {
-      print('No hay más cartas en la baraja');
       throw Exception('No hay más cartas en la baraja');
     }
 
     nuevaCartaFinal = sacarCarta();
-    print('Carta sacada: ${nuevaCartaFinal.toString()}');
 
     jugadoresCoincidentes = encontrarJugadoresCoincidentes(nuevaCartaFinal, jugadores);
-    print('Jugadores coincidentes: ${jugadoresCoincidentes.map((j) => j.name).join(', ')}');
 
   } while (jugadoresCoincidentes.isEmpty);
 
   cartaFinal = nuevaCartaFinal;
-  print("Carta final asignada: ${cartaFinal.toString()}");
   
   // Notifica a los observadores del cambio en el estado de la carta final.
   state = Baraja(
@@ -122,15 +116,12 @@ void asignarCartaFinal(List<Player> jugadores) {
   void generarYBarajarMazo(int numeroDeBarajas) {
     state = Baraja(numeroDeBarajas: numeroDeBarajas);
     state.barajar();
-    print(
-        "Mazo generado y barajado con $numeroDeBarajas barajas: ${state.cartas}");
   }
 
   Carta sacarCarta() {
     if (state.cartas.isNotEmpty) {
       // Obtiene la carta del final de la lista de cartas.
       Carta carta = state.cartas.last;
-      print("Carta sacada: $carta");
 
       // Remueve la carta del mazo.
       state.cartas.removeLast();
@@ -143,13 +134,9 @@ void asignarCartaFinal(List<Player> jugadores) {
   }
 
   void asignarCartasAJugadores(List<Player> jugadores, int cartasPorJugador) {
-    print("Asignando cartas a los jugadores");
 
-    print("Generado");
 
-    print("Número de jugadores: ${jugadores.length}");
     if (jugadores.isEmpty) {
-      print("No hay jugadores para asignar cartas.");
       return;
     }
 
@@ -159,8 +146,6 @@ void asignarCartaFinal(List<Player> jugadores) {
         cartasAsignadas.add(sacarCarta());
       }
       jugador.cartas = cartasAsignadas;
-      print(
-          "Cartas asignadas a ${jugador.name}: ${cartasAsignadas.map((c) => c.toString()).join(', ')}");
     }
   }
 
@@ -197,12 +182,10 @@ void asignarCartaFinal(List<Player> jugadores) {
       false; // Añade esto para rastrear el estado de la última carta
 
   void voltearCartaEnPiramide(int nivel, int posicion, List<Player> jugadores) {
-    print("Intentando voltear carta en nivel $nivel, posición $posicion");
 
     if (nivel < piramide.length && posicion < piramide[nivel].length) {
       var carta = piramide[nivel][posicion];
       if (carta != null && !cartasVolteadas.contains(carta)) {
-        print("Volteando carta: $carta");
         cartasVolteadas.add(carta);
         cartasBocaAbajo[nivel][posicion] = false;
         reglaActual = reglas[nivel];
@@ -213,14 +196,12 @@ void asignarCartaFinal(List<Player> jugadores) {
         if (carta == piramide[0][0]) {
           cartaFinalVolteada = true;
         }
-        print("Carta final volteada: $cartaFinalVolteada");
 
         // Si forzarCarta está activo y no hay coincidencia, agregar una nueva carta a la misma posición
         if (forzarCarta && !tieneCoincidencia(carta, jugadores)) {
           Carta nuevaCarta =
               sacarCarta(); // Suponiendo que 'sacarCarta' devuelve una nueva carta
           piramide[nivel][posicion] = nuevaCarta;
-          print("Forzando nueva carta en la pirámide: $nuevaCarta");
         }
 
         state = Baraja(

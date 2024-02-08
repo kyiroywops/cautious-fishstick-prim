@@ -24,10 +24,10 @@ class FinalScreen extends ConsumerWidget {
                 width: 200, // Ancho de la imagen
                 height: 200, // Altura de la imagen
               ),
-              SizedBox(height: 20), // Espacio entre imagen y texto
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: const Text(
+              const SizedBox(height: 20), // Espacio entre imagen y texto
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
                   'La proxima carta es la carta final, toma al seco.',
                   style: TextStyle(
                     fontSize: 24,
@@ -36,7 +36,7 @@ class FinalScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20), // Espacio entre texto y botón
+              const SizedBox(height: 20), // Espacio entre texto y botón
               ElevatedButton(
                 onPressed: () => _onVoltearCartaPressed(
                     context, ref),
@@ -44,7 +44,7 @@ class FinalScreen extends ConsumerWidget {
                   backgroundColor: Colors.white, // Fondo negro
                   foregroundColor: Colors.black, // Texto en blanco
                 ),
-                child: Text(
+                child: const Text(
                   'Voltear carta',
                   style: TextStyle(
                     fontFamily: 'Lexend',
@@ -70,7 +70,7 @@ Widget _buildFinalCardContainer() {
       height: 35,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        image: DecorationImage(
+        image: const DecorationImage(
           image: AssetImage('assets/images/cartas/cartafinal.png'),
         ),
       ),
@@ -110,7 +110,7 @@ void _onVoltearCartaPressed(BuildContext context, WidgetRef ref) {
   } else {
     // Muestre un mensaje si no hay cartas o no se encontraron coincidencias.
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('No se encontraron coincidencias o se han agotado las cartas.'),
         duration: Duration(seconds: 2),
       ),

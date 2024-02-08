@@ -14,59 +14,56 @@ import 'package:piramjuego/presentation/widgets/boton_atras.dart';
 import 'package:piramjuego/presentation/widgets/boton_discord.dart';
 import 'package:playing_cards/playing_cards.dart';
 
-
 class CartasAsignadasScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final jugadores = ref.watch(playerProvider);
-    final sorbosX2 = ref.watch(sorbosX2Provider.state).state; // Accede al estado de sorbos x2
-    final cartasPorJugador = ref.read(cartasPorJugadorProvider.state).state;
-    final numeroDeBarajas = ref.read(numeroBarajasProvider.state).state;
-    final numerodePisos = ref.read(pisoProvider.state).state;
+    final sorbosX2 = ref.watch(sorbosX2Provider); 
+    final cartasPorJugador = ref.read(cartasPorJugadorProvider);
+    final numeroDeBarajas = ref.read(numeroBarajasProvider);
+    final numerodePisos = ref.read(pisoProvider);
 
+    void onGenerateAndAssignPressed() {
+      ref.read(barajaProvider.notifier).generarYAsignarCartas(jugadores,
+          cartasPorJugador, sorbosX2, numeroDeBarajas, numerodePisos);
+      ref.read(playerProvider.notifier).setPlayers(jugadores);
+    }
 
-  
+    final gameMode = ref.watch(gameModeProvider);
 
-
-
-
-  void onGenerateAndAssignPressed() {
-    ref.read(barajaProvider.notifier).generarYAsignarCartas(jugadores, cartasPorJugador, sorbosX2, numeroDeBarajas, numerodePisos);
-    ref.read(playerProvider.notifier).setPlayers(jugadores);
-  }
-
-    final gameMode = ref.watch(gameModeProvider.state).state;
-
-    
     return Scaffold(
- 
       backgroundColor: Theme.of(context).colorScheme.onBackground,
-       appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onBackground,
         leading: BotonAtras(),
         actions: [
           Container(
-            margin: EdgeInsets.only(
+            margin: const EdgeInsets.only(
                 right: 8), // Espacio entre el contenedor y el botón de Discord
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: Colors.brown.withOpacity(0.8),
               borderRadius: BorderRadius.circular(15),
             ),
             child: Text(
-              gameMode == GameMode.custom ? 'Personalizada' : 'Rápida',
-              style: TextStyle(color:Colors.white,  fontFamily: 'Lexend')
-            ),
+                gameMode == GameMode.custom ? 'Personalizada' : 'Rápida',
+                style:
+                    const TextStyle(color: Colors.white, fontFamily: 'Lexend')),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
             child: IconButton(
-              icon: Icon(Icons.discord, color: Colors.white,),
+              icon: const Icon(
+                Icons.discord,
+                color: Colors.white,
+              ),
               onPressed: () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return DiscordDialog(discordUrl: 'https://discord.gg/EHqWWN59'); // Coloca aquí tu URL de Discord
+                    return DiscordDialog(
+                        discordUrl:
+                            'https://discord.gg/EHqWWN59'); // Coloca aquí tu URL de Discord
                   },
                 );
               },
@@ -74,130 +71,126 @@ class CartasAsignadasScreen extends ConsumerWidget {
           ),
         ],
       ),
-
       body: Stack(
         children: [
           SingleChildScrollView(
-          
             child: Column(
-              
               children: [
-             
-                
-                  ListView.builder(
-                    itemCount: jugadores.length,
-                    padding: EdgeInsets.zero, // Establece el padding a cero
-          
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-          
-                    itemBuilder: (context, index) {
-                      final jugador = jugadores[index];
-                      print("Mostrando cartas de ${jugador.name}: ${jugador.cartas.map((c) => c.toString()).join(', ')}");
-            
-                      return Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage(jugador.avatar),
-                            radius: 30,
-                          ),
-                          title: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(jugador.name, style: TextStyle(
+                ListView.builder(
+                  itemCount: jugadores.length,
+                  padding: EdgeInsets.zero, // Establece el padding a cero
+
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+
+                  itemBuilder: (context, index) {
+                    final jugador = jugadores[index];
+
+                    return Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: AssetImage(jugador.avatar),
+                          radius: 30,
+                        ),
+                        title: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            jugador.name,
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Lexend',
                                 fontWeight: FontWeight.w800,
-                                fontSize: 17
-                                ), 
-                                
-                                // Letra blanca
-                            ),
+                                fontSize: 17),
+
+                            // Letra blanca
                           ),
-                          subtitle: jugador.cartas.isNotEmpty
-                         ? Row(
-                                  children: jugador.cartas
-                                      .map((c) => _buildPlayingCard(c))
-                                      .toList(),
-                                )
-                              : Text("Sin cartas", style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Lexend',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 17
-                                
-                              ),),
                         ),
-                      );
-                    },
-                  ),
-                
-               
+                        subtitle: jugador.cartas.isNotEmpty
+                            ? Row(
+                                children: jugador.cartas
+                                    .map((c) => _buildPlayingCard(c))
+                                    .toList(),
+                              )
+                            : const Text(
+                                "Sin cartas",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Lexend',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 17),
+                              ),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
-             Align(
+          Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Botón Asignar Cartas
                   ElevatedButton.icon(
                     onPressed: onGenerateAndAssignPressed,
-                    icon: Icon(Icons.refresh, color: Colors.white),
-                    label: Text('Asignar Cartas', style: TextStyle(color: Colors.white)),
+                    icon: const Icon(Icons.refresh, color: Colors.white),
+                    label: const Text('Asignar Cartas',
+                        style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                      backgroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
                     ),
                   ),
                   // Botón Jugar
-                 ElevatedButton.icon(
-                  onPressed: () {
-                    // Obtiene la lista de jugadores del provider
-                    final jugadores = ref.read(playerProvider);
-                    // Verifica si todos los jugadores tienen cartas asignadas
-                    bool cartasAsignadas = jugadores.every((jugador) => jugador.cartas.isNotEmpty);
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Obtiene la lista de jugadores del provider
+                      final jugadores = ref.read(playerProvider);
+                      // Verifica si todos los jugadores tienen cartas asignadas
+                      bool cartasAsignadas = jugadores
+                          .every((jugador) => jugador.cartas.isNotEmpty);
 
-                    if (!cartasAsignadas) {
-                      // Si no todas las cartas están asignadas, muestra la alerta.
-                      _showNoCardsAssignedAlert(context);
-                    } else {
-                      // Si todas las cartas están asignadas, procede al juego.
-                      GoRouter.of(context).go('/juego');
-                    }
-                  },
-                  icon: Icon(Icons.play_arrow, color: Colors.white),
-                  label: Text('Jugar', style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.black,
-                    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                      if (!cartasAsignadas) {
+                        // Si no todas las cartas están asignadas, muestra la alerta.
+                        _showNoCardsAssignedAlert(context);
+                      } else {
+                        // Si todas las cartas están asignadas, procede al juego.
+                        GoRouter.of(context).go('/juego');
+                      }
+                    },
+                    icon: const Icon(Icons.play_arrow, color: Colors.white),
+                    label: const Text('Jugar',
+                        style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
+                    ),
                   ),
-                ),
                 ],
               ),
             ),
           ),
-          
         ],
       ),
-      
     );
   }
 }
 
- 
 Widget _buildPlayingCard(my.Carta carta) {
   // Utiliza el prefijo 'my' para referirte a tus propios tipos
   Suit suit = _convertMySuitToPlayingCardSuit(carta.palo);
   CardValue value = _convertMyValueToPlayingCardValue(carta.valor);
 
   // Usa PlayingCardView para mostrar la carta
-  return Container(
-    width: 60,  // Ancho de la carta
-    height: 80,  // Altura de la carta
+  return SizedBox(
+    width: 60, // Ancho de la carta
+    height: 80, // Altura de la carta
     child: PlayingCardView(card: PlayingCard(suit, value)),
   );
 }
@@ -250,7 +243,6 @@ CardValue _convertMyValueToPlayingCardValue(my.CardValue myValue) {
   }
 }
 
-
 void _showNoCardsAssignedAlert(BuildContext context) {
   showDialog<void>(
     context: context,
@@ -259,15 +251,16 @@ void _showNoCardsAssignedAlert(BuildContext context) {
         backgroundColor: Colors.grey.shade300, // Fondo del AlertDialog
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0), // Bordes redondeados
-          side: BorderSide(color: Colors.red, width: 5), // Borde rojo
+          side: const BorderSide(color: Colors.red, width: 5), // Borde rojo
         ),
-        titlePadding: EdgeInsets.only(top: 20), // Padding en la parte superior del título
-        title: Icon(
+        titlePadding:
+            const EdgeInsets.only(top: 20), // Padding en la parte superior del título
+        title: const Icon(
           Icons.warning_amber_rounded, // Ícono de advertencia
           color: Colors.red, // Color rojo para el ícono
           size: 68.0, // Tamaño del ícono
         ),
-        content: Text(
+        content: const Text(
           'No se han asignado cartas a todos los jugadores.',
           style: TextStyle(
             fontFamily: 'Lexend',
@@ -278,7 +271,7 @@ void _showNoCardsAssignedAlert(BuildContext context) {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(), // Cierra el diálogo
-            child: Text(
+            child: const Text(
               'OK',
               style: TextStyle(
                 fontFamily: 'Lexend',

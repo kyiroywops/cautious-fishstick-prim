@@ -14,14 +14,13 @@ import 'package:piramjuego/presentation/providers/sorbos_provider.dart';
 import 'package:playing_cards/playing_cards.dart';
 
 class ResultadoFinalScreen extends ConsumerStatefulWidget {
-
   final my.Carta cartaFinal;
   final List<Player> jugadoresCoincidentes;
 
   // Asegúrate de incluir un constructor que pase estas variables
-  ResultadoFinalScreen({Key? key, required this.cartaFinal, required this.jugadoresCoincidentes}) : super(key: key);
-
-
+  const ResultadoFinalScreen(
+      {Key? key, required this.cartaFinal, required this.jugadoresCoincidentes})
+      : super(key: key);
 
   @override
   _ResultadoFinalScreenState createState() => _ResultadoFinalScreenState();
@@ -34,10 +33,11 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
   void initState() {
     super.initState();
     // Inicializa el controlador de confeti aquí
-    _confettiController = ConfettiController(duration: const Duration(seconds: 10));
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 10));
     // Play the confetti animation when the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if(mounted) {
+      if (mounted) {
         _confettiController.play();
       }
     });
@@ -49,33 +49,26 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
     _confettiController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
- 
-
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final paddingTop = screenHeight * 0.05;
     final paddingTopBoton = screenHeight * 0.08;
     final paddingRight = screenWidth * 0.05;
 
-
-   
     final jugadores = ref.watch(playerProvider);
-    final sorbosX2 = ref
-        .watch(sorbosX2Provider.state)
-        .state; // Accede al estado de sorbos x2
-    final cartasPorJugador = ref.read(cartasPorJugadorProvider.state).state;
-    final numeroDeBarajas = ref.read(numeroBarajasProvider.state).state;
-    final numerodePisos = ref.read(pisoProvider.state).state;
-
+    final sorbosX2 = ref.watch(sorbosX2Provider);
+    final cartasPorJugador = ref.read(cartasPorJugadorProvider);
+    final numeroDeBarajas = ref.read(numeroBarajasProvider);
+    final numerodePisos = ref.read(pisoProvider);
 
     void reiniciarYComenzarNuevoJuego() {
       ref.read(barajaProvider.notifier).resetearJuego();
       ref.read(barajaProvider.notifier).generarYAsignarCartas(jugadores,
           cartasPorJugador, sorbosX2, numeroDeBarajas, numerodePisos);
     }
-    
 
     return Scaffold(
       backgroundColor: Colors.black26,
@@ -85,13 +78,20 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
               confettiController: _confettiController,
-              blastDirectionality: BlastDirectionality.explosive, // Se expande en todas direcciones
+              blastDirectionality: BlastDirectionality
+                  .explosive, // Se expande en todas direcciones
               emissionFrequency: 0.05,
               numberOfParticles: 20,
               maxBlastForce: 100,
               minBlastForce: 80,
               gravity: 0.3,
-              colors: const [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple], // Colores del confeti
+              colors: const [
+                Colors.green,
+                Colors.blue,
+                Colors.pink,
+                Colors.orange,
+                Colors.purple
+              ], // Colores del confeti
             ),
           ),
           Padding(
@@ -101,8 +101,8 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(30.0),
+                    const Padding(
+                      padding: EdgeInsets.all(30.0),
                       child: Text(
                         'La carta final es',
                         style: TextStyle(
@@ -112,10 +112,11 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
                             fontWeight: FontWeight.w900),
                       ),
                     ),
-                    _buildPlayingCard(widget.cartaFinal, context, isLarge: true),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    _buildPlayingCard(widget.cartaFinal, context,
+                        isLarge: true),
+                    const SizedBox(height: 20),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Text(
                         'Jugadores que coinciden',
                         style: TextStyle(
@@ -131,7 +132,7 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
                               _buildJugadorContainer(jugador, context))
                           .toList(),
                     if (widget.jugadoresCoincidentes.isEmpty)
-                      Text('No se encontró coincidencia',
+                      const Text('No se encontró coincidencia',
                           style: TextStyle(fontSize: 24, color: Colors.white)),
                   ],
                 ),
@@ -150,12 +151,12 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
                 // Navegas de vuelta a la pantalla que inicia el juego o donde sea adecuado
                 GoRouter.of(context).go('/cartasasignadas');
               },
-              icon: Icon(Icons.flag, color: Colors.black),
-              label: Text('Terminar Partida',
+              icon: const Icon(Icons.flag, color: Colors.black),
+              label: const Text('Terminar Partida',
                   style: TextStyle(color: Colors.black)),
               style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
             ),
           ),
         ],
@@ -165,8 +166,7 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
 
   Widget _buildJugadorContainer(Player jugador, BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         children: [
           Padding(
@@ -178,17 +178,17 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
                   backgroundImage: AssetImage(jugador.avatar),
                   radius: 30,
                 ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
-                jugador.name,
-                style: TextStyle(
-                    fontSize: 21,
-                    color: Colors.white,
-                    fontFamily: 'Lexend',
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    jugador.name,
+                    style: const TextStyle(
+                        fontSize: 21,
+                        color: Colors.white,
+                        fontFamily: 'Lexend',
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
               ],
             ),
           ),
@@ -216,7 +216,7 @@ class _ResultadoFinalScreenState extends ConsumerState<ResultadoFinalScreen> {
         : 52.0; // 50% del ancho de la pantalla para la carta grande
     var cardHeight = cardWidth * 1.4;
 
-    return Container(
+    return SizedBox(
       width: cardWidth,
       height: cardHeight,
       child: PlayingCardView(card: PlayingCard(suit, value)),

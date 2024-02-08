@@ -29,54 +29,64 @@ class JuegoPiramideScreen extends ConsumerWidget {
       bool shouldPop = (await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey.shade300, // Fondo del AlertDialog
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        titlePadding: EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 10.0),
-        contentPadding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-        title: Padding(
-          padding: const EdgeInsets.only(top: 10.0),
-          child: Icon(
-            Icons.autorenew,
-            color: Colors.black,
-            size: 68.0,
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(child: Text('¿Deseas salir?', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w800, fontSize: 20))),
-            SizedBox(height: 8),
-            Text('Si presionas "Salir", irás a la pantalla asignar cartas y se reiniciará la partida.', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w400)),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text('No', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w800)),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Salir', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w600)),
-            style: ElevatedButton.styleFrom(
-              primary: Colors.black,
-              onPrimary: Colors.white,
+              backgroundColor: Colors.grey.shade300, // Fondo del AlertDialog
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(20.0)),
+              titlePadding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 10.0),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+              title: const Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: Icon(
+                  Icons.autorenew,
+                  color: Colors.black,
+                  size: 68.0,
+                ),
               ),
+              content: const Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                      child: Text('¿Deseas salir?',
+                          style: TextStyle(
+                              fontFamily: 'Lexend',
+                              fontWeight: FontWeight.w800,
+                              fontSize: 20))),
+                  SizedBox(height: 8),
+                  Text(
+                      'Si presionas "Salir", irás a la pantalla asignar cartas y se reiniciará la partida.',
+                      style: TextStyle(
+                          fontFamily: 'Lexend', fontWeight: FontWeight.w400)),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('No',
+                      style: TextStyle(
+                          fontFamily: 'Lexend', fontWeight: FontWeight.w800)),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text('Salir',
+                      style: TextStyle(
+                          fontFamily: 'Lexend', fontWeight: FontWeight.w600)),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-
           )) ??
           false;
 
       return shouldPop;
     }
-
-    print("Reconstruyendo JuegoPiramideScreen con estado actualizado");
-    
 
     return Scaffold(
       appBar: AppBar(
@@ -84,7 +94,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
         leading: Padding(
           padding: const EdgeInsets.only(left: 25.0),
           child: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white, size: 23),
+            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 23),
             onPressed: () async {
               if (await _onWillPop()) {
                 GoRouter.of(context).push('/cartasasignadas');
@@ -116,50 +126,47 @@ class JuegoPiramideScreen extends ConsumerWidget {
                                 ? _buildCardBack(
                                     widthCartaAbajo, heightCartaAbajo)
                                 : _buildPlayingCard(piramide[nivel][posicion],
-                                    cardWidth, cardHeight, cardScale)
-                                  
-                                    
-                                    ),
-
-                                          if (nivel == 0) Padding(
-                                            
-                                          padding: const EdgeInsets.only(right: 50),
-                                            child: _buildFinalCardContainer(widthCartaAbajo, heightCartaAbajo),
-                                          ),
-
+                                    cardWidth, cardHeight, cardScale)),
+                      if (nivel == 0)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 50),
+                          child: _buildFinalCardContainer(
+                              widthCartaAbajo, heightCartaAbajo),
+                        ),
                     ],
                   ),
-               Padding(
-                padding: const EdgeInsets.all(25),
-                child: ElevatedButton.icon(
-                  icon: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.flip, color: Colors.grey[900]),
-                  ), // Ícono al lado del texto
-                  label: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Voltear Carta',
-                      style: TextStyle(
-                          fontFamily: 'Lexend',
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey[900]),
+                Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: ElevatedButton.icon(
+                    icon: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.flip, color: Colors.grey[900]),
+                    ), // Ícono al lado del texto
+                    label: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Voltear Carta',
+                        style: TextStyle(
+                            fontFamily: 'Lexend',
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.grey[900]),
+                      ),
                     ),
-                  ),
-                  onPressed: () => voltearSiguienteCarta(ref, context),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.grey[200],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    onPressed: () => voltearSiguienteCarta(ref, context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[200],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
                 ),
-              ),
                 Consumer(
                   builder: (context, ref, child) {
                     // Asumiendo que 'mostrarMensaje' es una variable booleana que controla la visibilidad
-                    final mostrarMensaje = ref.watch(mostrarMensajeCartaCoincideProvider);
+                    final mostrarMensaje =
+                        ref.watch(mostrarMensajeCartaCoincideProvider);
                     if (mostrarMensaje) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -167,27 +174,30 @@ class JuegoPiramideScreen extends ConsumerWidget {
                           margin: const EdgeInsets.symmetric(vertical: 20.0),
                           padding: const EdgeInsets.all(10.0),
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade300, // Color de fondo del contenedor
+                            color: Colors
+                                .grey.shade300, // Color de fondo del contenedor
                             borderRadius: BorderRadius.circular(15.0),
-                            border: Border(
+                            border: const Border(
                               left: BorderSide(
-                                color: Colors.red, // Cambiado a rojo para mayor visibilidad
+                                color: Colors
+                                    .red, // Cambiado a rojo para mayor visibilidad
                                 width: 5.0, // Ancho del borde izquierdo
                               ),
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             children: <Widget>[
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                                      padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
                                       child: Text(
                                         'Nadie tiene esa carta!',
                                         style: TextStyle(
-                                          color: Colors.red, // Cambiado a rojo para mayor visibilidad
+                                          color: Colors
+                                              .red, // Cambiado a rojo para mayor visibilidad
                                           fontWeight: FontWeight.w800,
                                           fontFamily: 'Lexend',
                                           fontSize: 18.0,
@@ -195,7 +205,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: EdgeInsets.all(8.0),
                                       child: Text(
                                         '¡No hubo coincidencia! Intenta de nuevo con "Voltear Carta".',
                                         style: TextStyle(
@@ -214,42 +224,45 @@ class JuegoPiramideScreen extends ConsumerWidget {
                         ),
                       );
                     } else {
-                      return SizedBox.shrink(); // Devuelve un contenedor vacío si no hay mensaje para mostrar.
+                      return const SizedBox
+                          .shrink(); // Devuelve un contenedor vacío si no hay mensaje para mostrar.
                     }
                   },
                 ),
 
                 // Muestra la regla para el nivel actual si es válido
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.center, // Centra los elementos en la fila
+                  mainAxisAlignment: MainAxisAlignment
+                      .center, // Centra los elementos en la fila
 
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Text(
                         barajaNotifier.reglaActual,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontFamily: 'Lexend',
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.w600),
                       ),
                     ),
-             Padding(
-              padding: const EdgeInsets.only(right: 20.0), // Ajusta el espacio alrededor de la imagen
-              child: SizedBox(
-                width: 40, // Ajusta el ancho de la imagen
-                height: 40, // Ajusta la altura de la imagen
-                child: Image.asset('assets/images/vasitojuego.png', fit: BoxFit.cover), // Usa BoxFit.cover para mantener la relación de aspecto
-              ),
-            ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          right:
+                              20.0), // Ajusta el espacio alrededor de la imagen
+                      child: SizedBox(
+                        width: 40, // Ajusta el ancho de la imagen
+                        height: 40, // Ajusta la altura de la imagen
+                        child: Image.asset('assets/images/vasitojuego.png',
+                            fit: BoxFit
+                                .cover), // Usa BoxFit.cover para mantener la relación de aspecto
+                      ),
+                    ),
                   ],
                 ),
 
-
                 // Aquí agregas el Consumer para escuchar los cambios y mostrar el mensaje
-
-
 
                 // Aquí utilizamos el spread operator para incluir condicionalmente un widget.
                 if (jugadorDebeTomar != null) ...[
@@ -264,27 +277,25 @@ class JuegoPiramideScreen extends ConsumerWidget {
   }
 
   Widget _buildJugadorDebeTomarWidget(Player jugador) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          CircleAvatar(
-            backgroundImage: AssetImage(jugador.avatar),
-            radius: 30,
-          ),
-          Text(
-            jugador.name,
-            style: TextStyle(
-                fontFamily: 'Lexend',
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: Colors.white),
-          ),
-          Row(
-            children: jugador.cartas.map((c) => _CartasJugadores(c)).toList(),
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        CircleAvatar(
+          backgroundImage: AssetImage(jugador.avatar),
+          radius: 30,
+        ),
+        Text(
+          jugador.name,
+          style: const TextStyle(
+              fontFamily: 'Lexend',
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: Colors.white),
+        ),
+        Row(
+          children: jugador.cartas.map((c) => _CartasJugadores(c)).toList(),
+        ),
+      ],
     );
   }
 
@@ -296,15 +307,13 @@ class JuegoPiramideScreen extends ConsumerWidget {
         height: heightCartaAbajo,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          image: DecorationImage(
+          image: const DecorationImage(
             image: AssetImage('assets/images/cartas/carta.png'),
           ),
         ),
       ),
     );
   }
-
-
 
   Widget _buildPlayingCard(
       my.Carta? carta, double cardWidth, double cardHeight, double scale) {
@@ -314,7 +323,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
     CardValue value = _convertMyValueToPlayingCardValue(carta.valor);
 
     // Ahora usa cardWidth, cardHeight y scale que se pasan como parámetros
-    return Container(
+    return SizedBox(
       width: cardWidth,
       height: cardHeight,
       child: Transform.scale(
@@ -324,24 +333,24 @@ class JuegoPiramideScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFinalCardContainer(double widthCartaAbajo, double heightCartaAbajo) {
+  Widget _buildFinalCardContainer(
+      double widthCartaAbajo, double heightCartaAbajo) {
     // Este método construirá el contenedor para la carta final.
     // Puedes personalizar la apariencia como quieras, aquí hay un ejemplo simple:
-   return Padding(
+    return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: heightCartaAbajo,
         height: widthCartaAbajo,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          image: DecorationImage(
+          image: const DecorationImage(
             image: AssetImage('assets/images/cartas/cartafinal.png'),
           ),
         ),
       ),
     );
   }
-
 
   Widget _CartasJugadores(my.Carta? carta) {
     if (carta == null) return Container(); // Opción para manejar cartas nulas
@@ -351,7 +360,7 @@ class JuegoPiramideScreen extends ConsumerWidget {
 
     double scale = 0.9; // Ajusta este valor según sea necesario
 
-    return Container(
+    return SizedBox(
       width: 50, // Ancho del contenedor
       height: 70, // Altura del contenedor
       child: Transform.scale(
@@ -411,26 +420,27 @@ class JuegoPiramideScreen extends ConsumerWidget {
 }
 
 void voltearSiguienteCarta(WidgetRef ref, context) {
-  print("Voltear siguiente carta llamado");
 
   var barajaNotifier = ref.read(barajaProvider.notifier);
   var jugadores = ref.read(playerProvider);
-  var forzarCarta = ref.read(forzarCartaProvider.state).state;
+  var forzarCarta = ref.read(forzarCartaProvider.notifier).state;
 
   // Restablece el estado del mensaje y jugadorDebeTomar al inicio
-  ref.read(mostrarMensajeCartaCoincideProvider.state).state = false;
+  ref.read(mostrarMensajeCartaCoincideProvider.notifier).state = false;
   ref.read(jugadorDebeTomarProvider.notifier).state = null;
 
-   // Verifica si la carta final ya ha sido volteada
+  // Verifica si la carta final ya ha sido volteada
   if (barajaNotifier.cartaFinalVolteada) {
-    print("La última carta ya ha sido volteada. Navegando a la pantalla final.");
     GoRouter.of(context).go('/cartafinal');
     return;
   }
 
-
-  for (int nivel = barajaNotifier.cartasBocaAbajo.length - 1; nivel >= 0; nivel--) {
-    for (int posicion = 0; posicion < barajaNotifier.cartasBocaAbajo[nivel].length; posicion++) {
+  for (int nivel = barajaNotifier.cartasBocaAbajo.length - 1;
+      nivel >= 0;
+      nivel--) {
+    for (int posicion = 0;
+        posicion < barajaNotifier.cartasBocaAbajo[nivel].length;
+        posicion++) {
       if (barajaNotifier.cartasBocaAbajo[nivel][posicion]) {
         var cartaVolteada = barajaNotifier.piramide[nivel][posicion];
         if (cartaVolteada != null) {
@@ -445,7 +455,8 @@ void voltearSiguienteCarta(WidgetRef ref, context) {
                 break; // Rompe el ciclo interno si encuentra coincidencia
               }
             }
-            if (hayCoincidencia) break; // Rompe el ciclo externo si encuentra coincidencia
+            if (hayCoincidencia)
+              break; // Rompe el ciclo externo si encuentra coincidencia
           }
 
           if (!hayCoincidencia) {
@@ -453,7 +464,7 @@ void voltearSiguienteCarta(WidgetRef ref, context) {
               barajaNotifier.reemplazarCartaEnPiramide(nivel, posicion);
             }
             // Muestra el mensaje solo si no hay coincidencias y se activó forzarCarta o no
-            ref.read(mostrarMensajeCartaCoincideProvider.state).state = true;
+            ref.read(mostrarMensajeCartaCoincideProvider.notifier).state = true;
           }
 
           return; // Salir después de voltear una carta.
@@ -461,5 +472,4 @@ void voltearSiguienteCarta(WidgetRef ref, context) {
       }
     }
   }
-  print("No se encontraron cartas boca abajo");
 }

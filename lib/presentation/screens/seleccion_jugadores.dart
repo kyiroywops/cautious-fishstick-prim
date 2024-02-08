@@ -54,7 +54,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
     _selectedAvatar = 'assets/images/avatars/avatar1.png';
 
     // Oculta el mensaje después de unos segundos
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) { // Verifica si el State está montado antes de llamar a setState
         setState(() {
           _showAddedMessage = false;
@@ -83,7 +83,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onBackground,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
             size: 20,
@@ -91,7 +91,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
               left: 16), // Agrega padding a la izquierda del icono
         ), // Esto cambiará el color del botón de retroceso a blanco
         title: Text(
@@ -126,7 +126,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 7, // Ajusta según el diseño de tu UI
                             crossAxisSpacing: 5, // Espaciado horizontal
                             mainAxisSpacing: 12, // Espaciado vertical
@@ -143,7 +143,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                                 });
                               },
                               child: AnimatedContainer(
-                                duration: Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 300),
                                 width: isSelected ? 100 : 80, // Ajusta estos tamaños según necesites
                                 height: isSelected ? 100 : 80, // Ajusta estos tamaños según necesites
                                 decoration: BoxDecoration(
@@ -166,7 +166,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
          Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 8.0),
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
             decoration: BoxDecoration(
               color: Colors.grey.shade300, // Fondo gris para el container
               borderRadius: BorderRadius.circular(20), // Bordes redondeados para el container
@@ -183,7 +183,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                 ],
                 
                 controller: _nameController,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontFamily: 'Lexend',
                   fontWeight: FontWeight.w700,
@@ -198,22 +198,22 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(color: Colors.transparent, width: 0), // Sin borde visible cuando no está enfocado
+                    borderSide: const BorderSide(color: Colors.transparent, width: 0), // Sin borde visible cuando no está enfocado
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(color: Colors.transparent, width: 0), // Sin borde visible cuando no está enfocado
+                    borderSide: const BorderSide(color: Colors.transparent, width: 0), // Sin borde visible cuando no está enfocado
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(color: Colors.green, width: 2.0), // Borde verde cuando está enfocado
+                    borderSide: const BorderSide(color: Colors.green, width: 2.0), // Borde verde cuando está enfocado
                   ),
-                  contentPadding: EdgeInsets.symmetric(
+                  contentPadding: const EdgeInsets.symmetric(
                     horizontal: 30, // Aumenta el padding horizontal
                     vertical: 15, // Aumenta el padding vertical
                   ),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.add_circle_rounded, color: Colors.black),
+                    icon: const Icon(Icons.add_circle_rounded, color: Colors.black),
                     onPressed: players.length >= 20 ? null : _addPlayer,
                   ),
                 ),
@@ -229,7 +229,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
           decoration: BoxDecoration(
             color: Colors.grey.shade300, // Color de fondo del contenedor
             borderRadius: BorderRadius.circular(15.0),
-            border: Border(
+            border: const Border(
               left: BorderSide(
                 color: Colors.green, // Color del borde izquierdo
                 width: 5.0, // Ancho del borde izquierdo
@@ -247,7 +247,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         'El jugador $_addedPlayerName se ha agregado con éxito.',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black54,
                           fontFamily: 'Lexend',
                           fontWeight: FontWeight.w700,
@@ -261,7 +261,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
             ],
           ),
         )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
                   SizedBox(height: screenSize.height * 0.03),
                   Center(
                     child: Text(
@@ -278,7 +278,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                     ),
                   ),
                   SizedBox(height: screenSize.height * 0.03),
-                  Container(
+                  SizedBox(
                     height: screenSize.height * 0.4,
                     child: ListView.builder(
                       itemCount: players
@@ -312,7 +312,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                                 ),
                                 // Icono para eliminar jugadores
                                 trailing: IconButton(
-                                  icon: Icon(Icons.remove_circle,
+                                  icon: const Icon(Icons.remove_circle,
                                       color: Color(0xffFF414D)),
                                   onPressed: () {
                                     // Llama a la función para eliminar este jugador específico
@@ -331,7 +331,7 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
             ),
           ),
           isKeyboardVisible
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : Positioned(
                   right: screenSize.width * 0.05,
                   bottom: screenSize.height * 0.05,
@@ -340,11 +340,6 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                       if (players.isEmpty) {
                         _showNoPlayersAlert(context);
                       } else {
-                        // Opcional: Imprimir la información de los jugadores
-                        final updatedPlayers = ref.read(playerProvider);
-                        for (var player in updatedPlayers) {
-                          print('Jugador: ${player.name}');
-                        }
 
                         // Navegar a la pantalla de reglas
                         gameMode == GameMode.custom
@@ -352,17 +347,17 @@ class _PlayerSelectionScreenState extends ConsumerState<PlayerSelectionScreen> {
                             : GoRouter.of(context).go('/cartasasignadas');
                       }
                     },
-                    icon: Icon(Icons.play_arrow, color: Colors.white),
-                    label: Text('Jugar', style: TextStyle(color: Colors.white)),
+                    icon: const Icon(Icons.play_arrow, color: Colors.white),
+                    label: const Text('Jugar', style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
+                      backgroundColor: Colors.black,
                       padding: EdgeInsets.symmetric(
                         horizontal: screenSize.width *
                             0.05, // 5% del ancho de la pantalla
                         vertical: screenSize.height *
                             0.01, // 1% del alto de la pantalla
                       ),
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                           fontFamily: 'Lexend', fontWeight: FontWeight.w600),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
@@ -384,14 +379,14 @@ void _showPlayerAddedAlert(BuildContext context) {
         backgroundColor: Colors.grey.shade300, // Fondo del AlertDialog
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(color: Colors.green, width: 2), // Borde verde
+          side: const BorderSide(color: Colors.green, width: 2), // Borde verde
         ),
-        title: Icon(
+        title: const Icon(
           Icons.check_circle_outline, // Ícono de verificación
           color: Colors.green, // Color del ícono a verde
           size: 68.0,
         ),
-        content: Column(
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -420,7 +415,7 @@ void _showPlayerAddedAlert(BuildContext context) {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(
+            child: const Text(
               'OK',
               style: TextStyle(
                 fontFamily: 'Lexend',
@@ -447,9 +442,9 @@ void _showMaxPlayersAlert(BuildContext context, GameMode gameMode) {
         backgroundColor: Colors.grey.shade300,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(color: Colors.red, width: 2),
+          side: const BorderSide(color: Colors.red, width: 2),
         ),
-        title: Icon(
+        title: const Icon(
           Icons.error_outline,
           color: Colors.red,
           size: 68.0,
@@ -458,7 +453,7 @@ void _showMaxPlayersAlert(BuildContext context, GameMode gameMode) {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
+            const Center(
               child: Text(
                 'Límite alcanzado',
                 style: TextStyle(
@@ -469,10 +464,10 @@ void _showMaxPlayersAlert(BuildContext context, GameMode gameMode) {
                 ),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               alertMessage,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Lexend',
                 fontWeight: FontWeight.w400,
                 color: Colors.black,
@@ -483,7 +478,7 @@ void _showMaxPlayersAlert(BuildContext context, GameMode gameMode) {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(
+            child: const Text(
               'OK',
               style: TextStyle(
                 fontFamily: 'Lexend',
@@ -506,14 +501,14 @@ void _showNameExistsAlert(BuildContext context) {
         backgroundColor: Colors.grey.shade300,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
-          side: BorderSide(color: Colors.orange, width: 2),
+          side: const BorderSide(color: Colors.orange, width: 2),
         ),
-        title: Icon(
+        title: const Icon(
           Icons.warning_amber_rounded,
           color: Colors.orange,
           size: 68.0,
         ),
-        content: Column(
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -542,7 +537,7 @@ void _showNameExistsAlert(BuildContext context) {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(
+            child: const Text(
               'OK',
               style: TextStyle(
                 fontFamily: 'Lexend',
@@ -566,12 +561,12 @@ void _showNoPlayersAlert(BuildContext context) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        title: Icon(
+        title: const Icon(
           Icons.warning_amber_rounded,
           color: Colors.red,
           size: 68.0,
         ),
-        content: Text(
+        content: const Text(
           'Debe haber al menos un jugador para comenzar el juego.',
           style: TextStyle(
             fontFamily: 'Lexend',
@@ -582,7 +577,7 @@ void _showNoPlayersAlert(BuildContext context) {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(
+            child: const Text(
               'OK',
               style: TextStyle(
                 fontFamily: 'Lexend',

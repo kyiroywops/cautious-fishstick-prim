@@ -11,17 +11,17 @@ class DiscordDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: Colors.grey.shade300,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      titlePadding: EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 10.0),
-      contentPadding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-      title: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+      titlePadding: const EdgeInsets.fromLTRB(24.0, 24.0, 24.0, 10.0),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+      title: const Padding(
+        padding: EdgeInsets.only(top: 10.0),
         child: Icon(
           Icons.discord, // Aquí puedes usar el icono de Discord
           color: Colors.black,
           size: 68.0,
         ),
       ),
-      content: Column(
+      content: const Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -41,7 +41,7 @@ class DiscordDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('No', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w800)),
+          child: const Text('No', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w800)),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -49,14 +49,14 @@ class DiscordDialog extends StatelessWidget {
               await launch(discordUrl);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('No se pudo abrir el enlace de Discord')),
+                const SnackBar(content: Text('No se pudo abrir el enlace de Discord')),
               );
             }
           },
-          child: Text('Abrir Discord', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w600)),
+          child: const Text('Abrir Discord', style: TextStyle(fontFamily: 'Lexend', fontWeight: FontWeight.w600)),
           style: ElevatedButton.styleFrom(
-            primary: Colors.black,
-            onPrimary: Colors.white,
+            backgroundColor: Colors.black,
+            foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
